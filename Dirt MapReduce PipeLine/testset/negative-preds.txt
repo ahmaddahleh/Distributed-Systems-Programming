@@ -1,0 +1,2580 @@
+X expose to Y	X protect from Y
+X differ from Y	Y resemble X
+X distinguish from Y	Y associate with X
+X know as Y	X resemble Y
+X protect from Y	X expose to Y
+X associate with Y	Y occur X
+X characterize by Y	Y distinguish from X
+X distinguish from Y	Y have X
+X derive from Y	X kill Y
+X include Y	Y differ from X
+X have Y	Y distinguish from X
+X produce by Y	X destroy Y
+X derive from Y	X convert to Y
+X be in Y	X contain Y
+X be in Y	X have Y
+X derive from Y	X be against Y
+X contain Y	X be in Y
+X include Y	Y substitute for X
+X resemble Y	Y differentiate from X
+X simulate Y	X confound with Y
+X convert to Y	X derive from Y
+X produce Y	Y kill X
+X treat by Y	Y produce X
+X be against Y	X derive from Y
+X resemble Y	Y confuse with X
+X distinguish from Y	Y confound with X
+X associate with Y	Y distinguish from X
+X be in Y	Y occur in X
+X avoid in Y	X use in Y
+X prevent Y	X produce Y
+X differentiate from Y	Y resemble X
+X resemble Y	X confound with Y
+X kill Y	X derive from Y
+X get Y	Y kill X
+X contract Y	X die of Y
+X include Y	X confuse with Y
+X differ from Y	Y include X
+X substitute for Y	Y include X
+X be against Y	Y produce X
+X produce Y	Y use in X
+X produce by Y	X be against Y
+X simulate Y	X differ from Y
+X mimic Y	Y differentiate from X
+X characterize by Y	Y include X
+X correct Y	X indicate for Y
+X expose to Y	X die of Y
+X resemble Y	X know as Y
+X occur Y	Y associate with X
+X resemble Y	X distinguish from Y
+X confuse with Y	X include Y
+X produce by Y	X kill Y
+X produce Y	Y give to X
+X contract Y	X die from Y
+X be in Y	Y find in X
+X distinguish from Y	X characterize by Y
+X produce Y	Y be against X
+X resemble Y	Y distinguish from X
+X use in Y	Y produce X
+X have Y	X be in Y
+X suffer from Y	X die of Y
+X treat with Y	X produce Y
+X destroy Y	X produce by Y
+X simulate Y	Y confound with X
+X distinguish from Y	X associate with Y
+X give to Y	Y produce X
+X distinguish from Y	X confound with Y
+X develop Y	X die of Y
+X differ from Y	X confound with Y
+X characterize by Y	X distinguish from Y
+X produce Y	X prevent Y
+X resemble Y	Y differ from X
+X indicate for Y	X correct Y
+X distinguish from Y	X resemble Y
+X have Y	X die of Y
+X destroy Y	X derive from Y
+X kill Y	X produce by Y
+X associate with Y	X distinguish from Y
+X occur in Y	Y be in X
+X contract Y	Y kill X
+X resemble Y	X differ from Y
+X produce Y	Y destroy X
+X constrict Y	X dilate Y
+X produce Y	X treat with Y
+X be against Y	X produce by Y
+X dilate Y	X constrict Y
+X use in Y	X avoid in Y
+X get Y	X die of Y
+X produce Y	Y treat by X
+X simulate Y	Y distinguish from X
+X kill Y	Y produce X
+X derive from Y	X destroy Y
+X distinguish from Y	Y characterize by X
+X resemble Y	X confuse with Y
+X find in Y	Y be in X
+X destroy Y	Y produce X
+X convert to Y	Y convert to X
+X have Y	Y kill X
+X differentiate from Y	Y mimic X
+X get Y	X die from Y
+X expose to Y	X protect from Y
+X differ from Y	Y resemble X
+X distinguish from Y	Y associate with X
+X know as Y	X resemble Y
+X protect from Y	X expose to Y
+X associate with Y	Y occur X
+X characterize by Y	Y distinguish from X
+X distinguish from Y	Y have X
+X derive from Y	X kill Y
+X include Y	Y differ from X
+X have Y	Y distinguish from X
+X produce by Y	X destroy Y
+X derive from Y	X convert to Y
+X be in Y	X contain Y
+X be in Y	X have Y
+X derive from Y	X be against Y
+X contain Y	X be in Y
+X include Y	Y substitute for X
+X resemble Y	Y differentiate from X
+X simulate Y	X confound with Y
+X convert to Y	X derive from Y
+X produce Y	Y kill X
+X treat by Y	Y produce X
+X be against Y	X derive from Y
+X resemble Y	Y confuse with X
+X distinguish from Y	Y confound with X
+X associate with Y	Y distinguish from X
+X be in Y	Y occur in X
+X avoid in Y	X use in Y
+X prevent Y	X produce Y
+X differentiate from Y	Y resemble X
+X resemble Y	X confound with Y
+X kill Y	X derive from Y
+X get Y	Y kill X
+X contract Y	X die of Y
+X include Y	X confuse with Y
+X differ from Y	Y include X
+X substitute for Y	Y include X
+X be against Y	Y produce X
+X produce Y	Y use in X
+X produce by Y	X be against Y
+X simulate Y	X differ from Y
+X mimic Y	Y differentiate from X
+X characterize by Y	Y include X
+X correct Y	X indicate for Y
+X expose to Y	X die of Y
+X resemble Y	X know as Y
+X occur Y	Y associate with X
+X resemble Y	X distinguish from Y
+X confuse with Y	X include Y
+X produce by Y	X kill Y
+X produce Y	Y give to X
+X contract Y	X die from Y
+X be in Y	Y find in X
+X distinguish from Y	X characterize by Y
+X produce Y	Y be against X
+X resemble Y	Y distinguish from X
+X use in Y	Y produce X
+X have Y	X be in Y
+X suffer from Y	X die of Y
+X treat with Y	X produce Y
+X destroy Y	X produce by Y
+X simulate Y	Y confound with X
+X distinguish from Y	X associate with Y
+X give to Y	Y produce X
+X distinguish from Y	X confound with Y
+X develop Y	X die of Y
+X differ from Y	X confound with Y
+X characterize by Y	X distinguish from Y
+X produce Y	X prevent Y
+X resemble Y	Y differ from X
+X indicate for Y	X correct Y
+X distinguish from Y	X resemble Y
+X have Y	X die of Y
+X destroy Y	X derive from Y
+X kill Y	X produce by Y
+X associate with Y	X distinguish from Y
+X occur in Y	Y be in X
+X contract Y	Y kill X
+X resemble Y	X differ from Y
+X produce Y	Y destroy X
+X constrict Y	X dilate Y
+X produce Y	X treat with Y
+X be against Y	X produce by Y
+X dilate Y	X constrict Y
+X use in Y	X avoid in Y
+X get Y	X die of Y
+X produce Y	Y treat by X
+X simulate Y	Y distinguish from X
+X kill Y	Y produce X
+X derive from Y	X destroy Y
+X distinguish from Y	Y characterize by X
+X resemble Y	X confuse with Y
+X find in Y	Y be in X
+X destroy Y	Y produce X
+X convert to Y	Y convert to X
+X have Y	Y kill X
+X differentiate from Y	Y mimic X
+X get Y	X die from Y
+X administer for Y	Y administer for X
+X administer for Y	Y administer for X
+X affect by Y	Y affect by X
+X affect by Y	Y affect by X
+X afford by Y	Y afford by X
+X afford by Y	Y afford by X
+X attribute to Y	Y attribute to X
+X attribute to Y	Y attribute to X
+X be after Y	Y be after X
+X be after Y	Y be after X
+X be for Y	Y be for X
+X be for Y	Y be for X
+X be from Y	Y be from X
+X be from Y	Y be from X
+X carry by Y	Y carry by X
+X carry by Y	Y carry by X
+X cause by Y	Y cause by X
+X cause by Y	Y cause by X
+X characterize by Y	Y characterize by X
+X characterize by Y	Y characterize by X
+X come from Y	Y come from X
+X come from Y	Y come from X
+X complicate by Y	Y complicate by X
+X complicate by Y	Y complicate by X
+X contribute to Y	Y contribute to X
+X contribute to Y	Y contribute to X
+X control by Y	Y control by X
+X control by Y	Y control by X
+X convert by Y	Y convert by X
+X convert by Y	Y convert by X
+X convert into Y	Y convert into X
+X convert into Y	Y convert into X
+X correct by Y	Y correct by X
+X correct by Y	Y correct by X
+X cure by Y	Y cure by X
+X cure by Y	Y cure by X
+X derive from Y	Y derive from X
+X derive from Y	Y derive from X
+X develop after Y	Y develop after X
+X develop after Y	Y develop after X
+X develop from Y	Y develop from X
+X develop from Y	Y develop from X
+X develop into Y	Y develop into X
+X develop into Y	Y develop into X
+X die from Y	Y die from X
+X die from Y	Y die from X
+X differentiate from Y	Y differentiate from X
+X differentiate from Y	Y differentiate from X
+X fertilize by Y	Y fertilize by X
+X fertilize by Y	Y fertilize by X
+X form from Y	Y form from X
+X form from Y	Y form from X
+X give for Y	Y give for X
+X give for Y	Y give for X
+X give to Y	Y give to X
+X give to Y	Y give to X
+X hydrolyze by Y	Y hydrolyze by X
+X hydrolyze by Y	Y hydrolyze by X
+X inactivate by Y	Y inactivate by X
+X inactivate by Y	Y inactivate by X
+X indicate for Y	Y indicate for X
+X indicate for Y	Y indicate for X
+X induce by Y	Y induce by X
+X induce by Y	Y induce by X
+X inhibit by Y	Y inhibit by X
+X inhibit by Y	Y inhibit by X
+X inject into Y	Y inject into X
+X inject into Y	Y inject into X
+X introduce by Y	Y introduce by X
+X introduce by Y	Y introduce by X
+X isolate from Y	Y isolate from X
+X isolate from Y	Y isolate from X
+X kill by Y	Y kill by X
+X kill by Y	Y kill by X
+X lead to Y	Y lead to X
+X lead to Y	Y lead to X
+X make by Y	Y make by X
+X make by Y	Y make by X
+X make from Y	Y make from X
+X make from Y	Y make from X
+X manifest by Y	Y manifest by X
+X manifest by Y	Y manifest by X
+X metabolize to Y	Y metabolize to X
+X metabolize to Y	Y metabolize to X
+X need for Y	Y need for X
+X need for Y	Y need for X
+X obtain from Y	Y obtain from X
+X obtain from Y	Y obtain from X
+X occur after Y	Y occur after X
+X occur after Y	Y occur after X
+X occur during Y	Y occur during X
+X occur during Y	Y occur during X
+X occur from Y	Y occur from X
+X occur from Y	Y occur from X
+X order for Y	Y order for X
+X order for Y	Y order for X
+X overcome by Y	Y overcome by X
+X overcome by Y	Y overcome by X
+X penetrate by Y	Y penetrate by X
+X penetrate by Y	Y penetrate by X
+X precede by Y	Y precede by X
+X precede by Y	Y precede by X
+X precipitate by Y	Y precipitate by X
+X precipitate by Y	Y precipitate by X
+X predispose to Y	Y predispose to X
+X predispose to Y	Y predispose to X
+X prepare from Y	Y prepare from X
+X prepare from Y	Y prepare from X
+X prescribe for Y	Y prescribe for X
+X prescribe for Y	Y prescribe for X
+X prevent by Y	Y prevent by X
+X prevent by Y	Y prevent by X
+X produce by Y	Y produce by X
+X produce by Y	Y produce by X
+X progress to Y	Y progress to X
+X progress to Y	Y progress to X
+X provide by Y	Y provide by X
+X provide by Y	Y provide by X
+X provide from Y	Y provide from X
+X provide from Y	Y provide from X
+X recommend for Y	Y recommend for X
+X recommend for Y	Y recommend for X
+X refer to Y	Y refer to X
+X refer to Y	Y refer to X
+X relieve by Y	Y relieve by X
+X relieve by Y	Y relieve by X
+X require for Y	Y require for X
+X require for Y	Y require for X
+X reserve for Y	Y reserve for X
+X reserve for Y	Y reserve for X
+X respond to Y	Y respond to X
+X respond to Y	Y respond to X
+X result from Y	Y result from X
+X result from Y	Y result from X
+X secrete by Y	Y secrete by X
+X secrete by Y	Y secrete by X
+X spread by Y	Y spread by X
+X spread by Y	Y spread by X
+X succeed to Y	Y succeed to X
+X succeed to Y	Y succeed to X
+X suffer from Y	Y suffer from X
+X suffer from Y	Y suffer from X
+X take for Y	Y take for X
+X take for Y	Y take for X
+X transmit by Y	Y transmit by X
+X transmit by Y	Y transmit by X
+X transmit through Y	Y transmit through X
+X transmit through Y	Y transmit through X
+X treat by Y	Y treat by X
+X treat by Y	Y treat by X
+X use for Y	Y use for X
+X use for Y	Y use for X
+X cure with Y	X give with Y
+Y infect X	Y treat X
+Y produce X	Y use X
+X afford by Y	X fertilize by Y
+X accompany with Y	X attack with Y
+X release into Y	X turn into Y
+Y characterize by X	Y inactivate by X
+X create Y	X discover Y
+Y afford by X	Y cure by X
+X discharge Y	X ejaculate Y
+Y kill X	Y provide X
+X associate with Y	X control with Y
+Y suggest X	Y wipe X
+X manifest by Y	X overcome by Y
+X come with Y	X unite with Y
+Y convert to X	Y progress to X
+X accompany by Y	X treat by Y
+Y accompany by X	Y convert by X
+X obtain with Y	X relieve with Y
+X come with Y	X see with Y
+X aggravate Y	X exacerbate Y
+X affect with Y	X treat with Y
+Y hydrolyze X	Y treat X
+X contract Y	X precipitate Y
+X alternate with Y	X relieve with Y
+X develop with Y	X use with Y
+X involve Y	X secrete Y
+Y infect with X	Y start with X
+X create Y	X promote Y
+Y eradicate X	Y get X
+X get Y	X trigger Y
+Y characterize by X	Y control by X
+X inhibit Y	X promote Y
+X be with Y	X occur with Y
+X fight Y	X improve Y
+Y fertilize by X	Y treat by X
+X release Y	X relieve Y
+X manufacture Y	X offer Y
+Y kill X	Y mimic X
+X prevent Y	X secrete Y
+X afford Y	X manufacture Y
+Y result in X	Y terminate in X
+X convert to Y	X give to Y
+Y occur X	Y use X
+Y occur in X	Y result in X
+Y alternate with X	Y develop with X
+Y affect X	Y relieve X
+Y encounter X	Y mask X
+Y achieve with X	Y correct with X
+Y encounter X	Y have X
+Y attack X	Y offer X
+Y eliminate X	Y occur X
+X get Y	X kill Y
+Y complicate with X	Y infect with X
+X lead to Y	X relate to Y
+Y infect X	Y present X
+Y eliminate X	Y penetrate X
+Y form from X	Y result from X
+X exacerbate Y	X use Y
+Y affect X	Y inhibit X
+X find Y	X induce Y
+X encounter Y	X transmit Y
+X know as Y	X present as Y
+Y manifest by X	Y prevent by X
+X kill Y	X produce Y
+Y produce X	Y wipe X
+X kill by Y	X relieve by Y
+Y cause X	Y mean X
+Y correct X	Y enter X
+X penetrate Y	X promote Y
+X mask Y	X use Y
+X afford by Y	X introduce by Y
+Y require X	Y transmit X
+Y come from X	Y prepare from X
+Y improve X	Y take X
+X correct with Y	X respond with Y
+X convert to Y	X respond to Y
+X associate with Y	X correct with Y
+Y cause by X	Y fertilize by X
+X involve Y	X replace Y
+X decrease Y	X discharge Y
+Y introduce X	Y offer X
+X characterize by Y	X provide by Y
+Y cure by X	Y provide by X
+X correct by Y	X prevent by Y
+Y afford X	Y mask X
+X complicate by Y	X precipitate by Y
+Y inhibit by X	Y treat by X
+Y contain X	Y transmit X
+X increase Y	X trigger Y
+X prescribe for Y	X reserve for Y
+Y follow X	Y infect X
+X digest Y	X precede Y
+X occur Y	X receive Y
+Y inactivate X	Y use X
+X improve Y	X simulate Y
+X convert by Y	X induce by Y
+X alleviate Y	X improve Y
+Y alleviate X	Y relieve X
+X start with Y	X unite with Y
+X correct Y	X secrete Y
+Y affect by X	Y inactivate by X
+Y include X	Y mask X
+X find in Y	X indicate in Y
+Y bring X	Y give X
+X attend with Y	X combine with Y
+Y fertilize by X	Y hydrolyze by X
+X convert Y	X meet Y
+Y control by X	Y convert by X
+X attend with Y	X occur with Y
+Y indicate X	Y present X
+X create Y	X present Y
+Y cure X	Y improve X
+X carry by Y	X kill by Y
+X fight Y	X transmit Y
+X discover Y	X offer Y
+Y eliminate X	Y secrete X
+Y confound with X	Y obtain with X
+Y differentiate from X	Y isolate from X
+X contain Y	X cure Y
+X develop Y	X present Y
+Y release X	Y wipe X
+X appear in Y	X result in Y
+Y decrease X	Y precede X
+Y hydrolyze by X	Y treat by X
+Y affect by X	Y kill by X
+X associate Y	X present Y
+Y inhibit by X	Y precipitate by X
+Y cure with X	Y join with X
+Y overcome by X	Y spread by X
+Y eradicate X	Y suggest X
+X attack Y	X receive Y
+Y follow X	Y show X
+Y improve X	Y treat X
+X overcome by Y	X spread by Y
+Y define as X	Y manifest as X
+X have Y	X present Y
+X achieve with Y	X start with Y
+X destroy Y	X make Y
+X discover Y	X fight Y
+Y hydrolyze X	Y receive X
+X attack with Y	X develop with Y
+Y destroy X	Y help X
+X indicate in Y	X observe in Y
+Y correct with X	Y develop with X
+X complicate Y	X enter Y
+X herald by Y	X kill by Y
+Y affect X	Y encounter X
+Y combine with X	Y come with X
+Y correct X	Y mimic X
+X control Y	X spread Y
+Y complicate X	Y simulate X
+Y be for X	Y recommend for X
+Y correct by X	Y introduce by X
+X indicate Y	X relieve Y
+X accompany Y	X help Y
+Y combine with X	Y start with X
+Y control X	Y transmit X
+Y be with X	Y treat with X
+Y derive from X	Y suffer from X
+X achieve with Y	X affect with Y
+X help Y	X improve Y
+Y imply X	Y relieve X
+Y be for X	Y indicate for X
+X make from Y	X obtain from Y
+Y complicate X	Y release X
+X fertilize by Y	X precipitate by Y
+X die from Y	X prepare from Y
+X cover Y	X produce Y
+Y combine with X	Y control with X
+Y fertilize X	Y inactivate X
+X develop Y	X occur Y
+X be with Y	X come with Y
+X alternate with Y	X begin with Y
+Y offer X	Y use X
+X give with Y	X treat with Y
+Y simulate X	Y suppress X
+X administer to Y	X progress to Y
+Y inactivate by X	Y relieve by X
+X penetrate by Y	X produce by Y
+X create Y	X release Y
+X attack Y	X mean Y
+X develop Y	X increase Y
+X cure by Y	X overcome by Y
+X convert by Y	X relieve by Y
+Y kill X	Y release X
+Y develop X	Y get X
+Y decrease X	Y mean X
+Y complicate X	Y relieve X
+X eliminate Y	X have Y
+X dilate Y	X suggest Y
+Y control with X	Y present with X
+Y imply X	Y offer X
+Y inhibit by X	Y spread by X
+Y introduce by X	Y precede by X
+Y eliminate X	Y produce X
+X occur from Y	X provide from Y
+Y begin with X	Y combine with X
+X complicate with Y	X see with Y
+Y precipitate by X	Y spread by X
+X affect with Y	X help with Y
+X manifest by Y	X secrete by Y
+Y aggravate X	Y inactivate X
+X appear in Y	X develop in Y
+X introduce Y	X involve Y
+X fight Y	X resemble Y
+Y imply X	Y reduce X
+Y confound with X	Y correct with X
+X constrict Y	X reduce Y
+X be with Y	X join with Y
+Y fertilize X	Y occur X
+Y decrease X	Y wipe X
+Y receive X	Y secrete X
+X cure with Y	X respond with Y
+Y affect X	Y include X
+X affect with Y	X respond with Y
+X fertilize by Y	X herald by Y
+Y act as X	Y define as X
+X accompany Y	X invent Y
+Y combine with X	Y infect with X
+Y affect with X	Y combine with X
+X increase Y	X prevent Y
+X dilate Y	X enter Y
+X join with Y	X manage with Y
+Y accompany X	Y wipe X
+X develop with Y	X manage with Y
+Y contain X	Y induce X
+Y convert X	Y encounter X
+Y encounter X	Y mean X
+Y show X	Y suggest X
+X attack Y	X give Y
+X cause Y	X precede Y
+X afford Y	X improve Y
+Y encounter X	Y produce X
+Y induce by X	Y make by X
+X afford by Y	X inactivate by Y
+X overcome by Y	X transmit by Y
+X correct by Y	X inactivate by Y
+Y cause X	Y get X
+X meet Y	X offer Y
+Y manifest by X	Y spread by X
+X discover Y	X produce Y
+Y mistake for X	Y use for X
+X manufacture Y	X occur Y
+Y complicate by X	Y penetrate by X
+X lead to Y	X succeed to Y
+Y mask X	Y present X
+X obtain with Y	X see with Y
+X aggravate Y	X mimic Y
+X induce Y	X inhibit Y
+Y fertilize X	Y induce X
+X create Y	X find Y
+Y convert X	Y manufacture X
+X derive from Y	X distinguish from Y
+X avoid in Y	X be in Y
+Y follow X	Y improve X
+Y inhibit X	Y meet X
+X be with Y	X present with Y
+X eradicate Y	X occur Y
+Y convert X	Y infect X
+X affect in Y	X metabolize in Y
+X attribute to Y	X transmit to Y
+X complicate with Y	X manage with Y
+X correct Y	X cure Y
+X affect with Y	X start with Y
+Y complicate X	Y encounter X
+Y cure by X	Y treat by X
+X fertilize Y	X infect Y
+X alleviate Y	X imply Y
+Y provide from X	Y suffer from X
+X control Y	X present Y
+X accompany Y	X get Y
+Y give X	Y use X
+X accompany Y	X give Y
+Y afford by X	Y follow by X
+Y aggravate X	Y help X
+Y follow by X	Y penetrate by X
+X accompany with Y	X correct with Y
+X help Y	X include Y
+X complicate Y	X manufacture Y
+Y offer X	Y provide X
+Y get X	Y simulate X
+X penetrate by Y	X treat by Y
+X develop after Y	X occur after Y
+Y get X	Y manufacture X
+Y introduce by X	Y transmit by X
+X give with Y	X see with Y
+X carry by Y	X precede by Y
+X give to Y	X respond to Y
+X induce Y	X reduce Y
+Y hydrolyze X	Y manufacture X
+X inactivate by Y	X precipitate by Y
+X cure with Y	X unite with Y
+Y carry X	Y induce X
+Y develop X	Y mean X
+X indicate for Y	X use for Y
+X affect by Y	X produce by Y
+X affect Y	X get Y
+X infect Y	X release Y
+X attack Y	X decrease Y
+X cause Y	X promote Y
+Y suggest X	Y treat X
+X follow by Y	X induce by Y
+Y give to X	Y predispose to X
+Y accompany X	Y relieve X
+X convert to Y	X transmit to Y
+X alleviate Y	X digest Y
+Y kill by X	Y provide by X
+Y enter X	Y receive X
+Y lead to X	Y progress to X
+Y encounter X	Y offer X
+Y come from X	Y distinguish from X
+X overcome by Y	X produce by Y
+X associate Y	X eradicate Y
+X correct Y	X reach Y
+Y have X	Y improve X
+Y characterize by X	Y transmit by X
+Y convert by X	Y inhibit by X
+Y derive from X	Y die from X
+Y mask X	Y show X
+Y eliminate X	Y get X
+Y bring X	Y convert X
+X exacerbate Y	X increase Y
+X decrease Y	X invent Y
+X offer Y	X take Y
+Y control X	Y have X
+Y affect X	Y cure X
+Y come with X	Y confuse with X
+Y meet X	Y receive X
+Y carry X	Y decrease X
+X carry Y	X secrete Y
+X affect with Y	X associate with Y
+X confine to Y	X give to Y
+X confound with Y	X start with Y
+X develop Y	X promote Y
+X imply Y	X offer Y
+X terminate in Y	X use in Y
+Y associate with X	Y complicate with X
+X correct Y	X kill Y
+X afford Y	X secrete Y
+X characterize by Y	X transmit by Y
+X eradicate Y	X provide Y
+Y differ from X	Y occur from X
+X include Y	X trigger Y
+X inactivate by Y	X metabolize by Y
+Y give to X	Y metabolize to X
+Y need for X	Y recommend for X
+Y cure X	Y infect X
+Y eradicate X	Y relieve X
+Y give X	Y induce X
+Y bring X	Y infect X
+X control with Y	X see with Y
+Y improve X	Y introduce X
+X occur Y	X wipe Y
+Y inactivate by X	Y secrete by X
+X carry Y	X simulate Y
+Y correct by X	Y treat by X
+Y introduce X	Y relieve X
+Y encounter X	Y manufacture X
+Y complicate X	Y have X
+X cure Y	X infect Y
+Y control by X	Y hydrolyze by X
+Y mask X	Y relieve X
+X affect with Y	X give with Y
+X cause by Y	X spread by Y
+Y destroy X	Y simulate X
+X die from Y	X transmit from Y
+X meet Y	X produce Y
+X follow Y	X kill Y
+X give with Y	X obtain with Y
+X combine with Y	X confuse with Y
+X discharge Y	X discover Y
+Y enter X	Y kill X
+X overcome by Y	X precede by Y
+Y affect with X	Y correct with X
+Y help X	Y mask X
+X help Y	X suggest Y
+X eradicate Y	X transmit Y
+X constrict Y	X trigger Y
+Y confuse with X	Y join with X
+X follow by Y	X secrete by Y
+X aggravate Y	X inhibit Y
+Y indicate for X	Y order for X
+X complicate Y	X make Y
+Y accompany with X	Y infect with X
+Y cause X	Y induce X
+Y carry X	Y use X
+X eradicate Y	X exacerbate Y
+Y affect X	Y treat X
+X accompany with Y	X see with Y
+X prepare from Y	X suffer from Y
+X reach Y	X stimulate Y
+X hydrolyze by Y	X induce by Y
+Y follow X	Y have X
+X attend with Y	X join with Y
+X precede by Y	X produce by Y
+Y alternate with X	Y confound with X
+X fertilize Y	X resemble Y
+Y encounter X	Y imply X
+X receive Y	X release Y
+Y fertilize by X	Y produce by X
+X convert by Y	X correct by Y
+X convert Y	X cure Y
+X provide Y	X stimulate Y
+X fertilize Y	X replace Y
+X afford Y	X indicate Y
+Y administer for X	Y give for X
+X meet Y	X treat Y
+Y confuse with X	Y correct with X
+X relieve with Y	X see with Y
+Y confound with X	Y cure with X
+Y give X	Y produce X
+X precede by Y	X provide by Y
+X affect by Y	X manifest by Y
+X kill Y	X wipe Y
+X be for Y	X substitute for Y
+X produce by Y	X transmit by Y
+Y develop in X	Y produce in X
+X cure Y	X offer Y
+X inhibit Y	X receive Y
+X characterize by Y	X convert by Y
+Y convert to X	Y respond to X
+Y hydrolyze X	Y prevent X
+X indicate Y	X replace Y
+Y carry by X	Y control by X
+Y encounter X	Y release X
+Y inactivate X	Y relieve X
+Y cure X	Y mean X
+Y come with X	Y occur with X
+X include Y	X mask Y
+Y convert X	Y decrease X
+Y imply X	Y involve X
+Y inhibit by X	Y make by X
+Y bring X	Y imply X
+X fertilize by Y	X spread by Y
+X distinguish from Y	X form from Y
+X attribute to Y	X lead to Y
+Y control X	Y meet X
+Y get X	Y induce X
+X carry Y	X suggest Y
+Y refer to X	Y relate to X
+X be from Y	X die from Y
+Y manufacture X	Y use X
+X combine with Y	X come with Y
+X penetrate Y	X produce Y
+Y prescribe for X	Y recommend for X
+X control Y	X induce Y
+X inhibit by Y	X provide by Y
+X complicate Y	X stimulate Y
+X occur with Y	X start with Y
+Y convert X	Y precede X
+X associate with Y	X obtain with Y
+X inactivate by Y	X kill by Y
+X administer with Y	X be with Y
+Y hydrolyze by X	Y secrete by X
+X give to Y	X relate to Y
+Y complicate by X	Y fertilize by X
+Y affect X	Y mask X
+X help Y	X penetrate Y
+X affect by Y	X transmit by Y
+Y cause X	Y correct X
+X dilate Y	X wipe Y
+Y penetrate X	Y take X
+Y recommend for X	Y reserve for X
+Y control by X	Y secrete by X
+X accompany by Y	X inactivate by Y
+X follow Y	X require Y
+Y affect in X	Y see in X
+Y enter X	Y mask X
+X ejaculate Y	X replace Y
+X develop Y	X secrete Y
+Y manifest by X	Y overcome by X
+Y imply X	Y release X
+Y include X	Y inhibit X
+Y join with X	Y occur with X
+X discharge Y	X indicate Y
+Y differentiate from X	Y distinguish from X
+Y differ from X	Y differentiate from X
+Y follow X	Y relieve X
+Y order for X	Y use for X
+X afford by Y	X precede by Y
+X begin with Y	X correct with Y
+X be with Y	X start with Y
+Y suggest X	Y use X
+X characterize by Y	X penetrate by Y
+Y follow X	Y treat X
+Y kill X	Y produce X
+X find Y	X receive Y
+X have Y	X introduce Y
+Y mask X	Y occur X
+Y follow by X	Y relieve by X
+Y characterize by X	Y hydrolyze by X
+X cure Y	X indicate Y
+X inactivate by Y	X treat by Y
+Y afford by X	Y kill by X
+X administer to Y	X expose to Y
+Y make by X	Y prevent by X
+Y infect with X	Y occur with X
+X administer to Y	X transmit to Y
+X inhibit by Y	X transmit by Y
+X present Y	X simulate Y
+Y start with X	Y use with X
+Y administer for X	Y prescribe for X
+Y cure by X	Y penetrate by X
+Y present X	Y produce X
+X achieve with Y	X see with Y
+X follow by Y	X hydrolyze by Y
+Y control X	Y offer X
+Y accompany with X	Y use with X
+X cure by Y	X penetrate by Y
+X complicate Y	X present Y
+X encounter Y	X induce Y
+Y penetrate by X	Y treat by X
+X differentiate from Y	X provide from Y
+X develop Y	X relieve Y
+X achieve with Y	X associate with Y
+Y encounter X	Y indicate X
+X constrict Y	X treat Y
+Y aggravate X	Y provide X
+Y infect X	Y mask X
+X infect Y	X involve Y
+X be from Y	X form from Y
+Y introduce by X	Y overcome by X
+X differ from Y	X protect from Y
+X hydrolyze by Y	X secrete by Y
+X contain Y	X help Y
+Y die from X	Y suffer from X
+Y cover X	Y produce X
+Y attack X	Y cause X
+X break Y	X complicate Y
+Y confuse with X	Y treat with X
+Y enter X	Y simulate X
+Y associate with X	Y present with X
+X attend with Y	X manage with Y
+X cure Y	X prevent Y
+X develop with Y	X relieve with Y
+X distinguish from Y	X protect from Y
+Y correct by X	Y cure by X
+X cause by Y	X treat by Y
+Y precede X	Y suggest X
+X develop for Y	X require for Y
+Y kill X	Y penetrate X
+X combine with Y	X obtain with Y
+Y develop with X	Y join with X
+Y imply X	Y induce X
+X offer Y	X suppress Y
+X accompany with Y	X confuse with Y
+Y get X	Y improve X
+Y have X	Y prevent X
+X administer to Y	X turn to Y
+X complicate by Y	X precede by Y
+Y alleviate X	Y resemble X
+X stimulate Y	X transmit Y
+Y correct X	Y mean X
+Y correct with X	Y start with X
+X metabolize by Y	X transmit by Y
+Y characterize by X	Y cure by X
+X attack with Y	X confuse with Y
+X see in Y	X terminate in Y
+X affect with Y	X begin with Y
+X discharge Y	X improve Y
+X begin with Y	X cure with Y
+X accompany by Y	X induce by Y
+Y offer X	Y treat X
+X cause Y	X eliminate Y
+Y alternate with X	Y come with X
+X increase Y	X induce Y
+X obtain from Y	X transmit from Y
+X hydrolyze by Y	X manifest by Y
+Y kill X	Y prevent X
+X imply Y	X prevent Y
+X act as Y	X begin as Y
+X carry Y	X produce Y
+Y find in X	Y use in X
+Y affect X	Y take X
+Y develop in X	Y find in X
+X require Y	X secrete Y
+X transmit Y	X treat Y
+X associate with Y	X combine with Y
+Y reduce X	Y transmit X
+X accompany by Y	X precipitate by Y
+X provide Y	X simulate Y
+X administer with Y	X present with Y
+X attack with Y	X confound with Y
+Y kill X	Y mean X
+X complicate by Y	X overcome by Y
+Y afford by X	Y relieve by X
+X develop with Y	X present with Y
+X eradicate Y	X release Y
+X dilate Y	X replace Y
+X control Y	X precipitate Y
+X cover Y	X get Y
+X attack with Y	X see with Y
+X control with Y	X correct with Y
+Y introduce X	Y produce X
+X release Y	X treat Y
+Y afford X	Y develop X
+X hydrolyze Y	X present Y
+X control with Y	X infect with Y
+Y mimic X	Y receive X
+X afford Y	X hydrolyze Y
+Y attack X	Y mask X
+X carry by Y	X penetrate by Y
+X administer to Y	X contribute to Y
+Y complicate X	Y induce X
+Y affect X	Y release X
+Y control by X	Y inactivate by X
+X cover Y	X trigger Y
+X define as Y	X manifest as Y
+X convert Y	X discover Y
+Y destroy X	Y transmit X
+Y cause by X	Y introduce by X
+Y come from X	Y form from X
+Y infect X	Y suppress X
+X complicate by Y	X convert by Y
+Y be for X	Y give for X
+X provide Y	X trigger Y
+X follow by Y	X produce by Y
+Y provide X	Y wipe X
+Y indicate X	Y treat X
+Y fertilize X	Y follow X
+Y fertilize by X	Y prevent by X
+Y be with X	Y confound with X
+X accompany with Y	X treat with Y
+X discover Y	X spread Y
+Y carry X	Y develop X
+Y mask X	Y take X
+X come with Y	X present with Y
+Y cover X	Y prevent X
+X contribute to Y	X succeed to Y
+X refer to Y	X respond to Y
+X manifest by Y	X treat by Y
+Y release X	Y take X
+Y inhibit X	Y show X
+Y confuse with X	Y relieve with X
+X carry Y	X follow Y
+X make by Y	X produce by Y
+Y correct X	Y prevent X
+Y give X	Y occur X
+Y be in X	Y produce in X
+Y mask X	Y prevent X
+X convert Y	X develop Y
+Y eliminate X	Y relieve X
+Y combine with X	Y treat with X
+X kill by Y	X provide by Y
+Y induce X	Y require X
+X get Y	X infect Y
+Y mean X	Y simulate X
+Y attribute to X	Y refer to X
+X imply Y	X transmit Y
+Y penetrate X	Y precede X
+X simulate Y	X suppress Y
+Y afford by X	Y characterize by X
+Y begin with X	Y start with X
+Y characterize by X	Y prevent by X
+Y cause X	Y include X
+Y make by X	Y secrete by X
+Y attribute to X	Y progress to X
+Y join with X	Y unite with X
+X begin as Y	X define as Y
+X correct Y	X create Y
+X eradicate Y	X precipitate Y
+X convert Y	X destroy Y
+X mask Y	X suppress Y
+X carry Y	X inactivate Y
+X correct by Y	X kill by Y
+X create Y	X involve Y
+X affect with Y	X alternate with Y
+X confuse with Y	X cure with Y
+X follow Y	X take Y
+X imply Y	X penetrate Y
+Y complicate with X	Y manage with X
+X come with Y	X complicate with Y
+Y induce by X	Y introduce by X
+X relieve by Y	X secrete by Y
+X occur Y	X stimulate Y
+Y destroy X	Y get X
+Y afford X	Y present X
+X affect with Y	X confuse with Y
+X create Y	X imply Y
+X eliminate Y	X imply Y
+X mean Y	X mimic Y
+Y complicate by X	Y provide by X
+X order for Y	X take for Y
+Y introduce X	Y mean X
+X develop from Y	X transmit from Y
+Y complicate X	Y destroy X
+X induce Y	X replace Y
+Y die from X	Y occur from X
+X contract Y	X fight Y
+X characterize by Y	X introduce by Y
+X improve Y	X suppress Y
+Y be for X	Y order for X
+X present Y	X prevent Y
+Y carry by X	Y prevent by X
+X describe as Y	X know as Y
+X form from Y	X make from Y
+X indicate in Y	X metabolize in Y
+X convert by Y	X herald by Y
+X precipitate Y	X require Y
+X help Y	X inactivate Y
+X accompany by Y	X penetrate by Y
+Y cure with X	Y start with X
+X control by Y	X make by Y
+X manage with Y	X unite with Y
+X know as Y	X use as Y
+X constrict Y	X eliminate Y
+Y eradicate X	Y treat X
+Y be for X	Y substitute for X
+X cure Y	X secrete Y
+X complicate by Y	X make by Y
+Y penetrate by X	Y precipitate by X
+Y destroy X	Y develop X
+X make Y	X provide Y
+X break Y	X contain Y
+Y contain X	Y indicate X
+Y confuse with X	Y control with X
+Y be in X	Y find in X
+Y alternate with X	Y correct with X
+X bring Y	X reach Y
+Y join with X	Y manage with X
+X administer to Y	X metabolize to Y
+Y control X	Y simulate X
+X destroy Y	X increase Y
+X attack Y	X fight Y
+X fertilize Y	X mean Y
+Y derive from X	Y result from X
+X discharge Y	X stimulate Y
+X administer with Y	X use with Y
+Y afford X	Y receive X
+X give for Y	X license for Y
+X get Y	X suggest Y
+Y accompany X	Y mean X
+X bring Y	X complicate Y
+Y occur with X	Y unite with X
+Y cover X	Y inhibit X
+Y precede by X	Y spread by X
+Y affect with X	Y be with X
+Y infect with X	Y relieve with X
+X isolate from Y	X make from Y
+Y cure with X	Y unite with X
+X complicate Y	X fight Y
+Y characterize by X	Y fertilize by X
+X offer Y	X reach Y
+Y inactivate by X	Y prevent by X
+X have Y	X meet Y
+X precipitate Y	X prevent Y
+X convert by Y	X follow by Y
+X infect with Y	X use with Y
+X derive from Y	X differ from Y
+Y afford by X	Y cause by X
+X constrict Y	X find Y
+Y affect by X	Y introduce by X
+X control by Y	X hydrolyze by Y
+Y occur X	Y provide X
+X give with Y	X present with Y
+X find Y	X mean Y
+Y aggravate X	Y get X
+Y fertilize X	Y use X
+X contain Y	X involve Y
+X discharge Y	X meet Y
+X eradicate Y	X mimic Y
+Y affect X	Y occur X
+X carry by Y	X control by Y
+Y control X	Y inhibit X
+X protect from Y	X suffer from Y
+X kill Y	X present Y
+X accompany with Y	X relieve with Y
+X confound with Y	X occur with Y
+X kill by Y	X overcome by Y
+Y infect with X	Y present with X
+X convert Y	X present Y
+X inhibit by Y	X manifest by Y
+X fertilize Y	X have Y
+X confound with Y	X see with Y
+Y accompany with X	Y start with X
+X inhibit Y	X use Y
+Y enter X	Y present X
+X complicate with Y	X correct with Y
+Y recommend for X	Y use for X
+Y require X	Y take X
+X come with Y	X manage with Y
+Y occur from X	Y provide from X
+Y afford X	Y carry X
+X eradicate Y	X reduce Y
+Y hydrolyze by X	Y spread by X
+Y meet X	Y suggest X
+X affect Y	X kill Y
+X overcome by Y	X secrete by Y
+Y affect by X	Y inhibit by X
+X inhibit Y	X simulate Y
+X afford Y	X fertilize Y
+X inhibit by Y	X produce by Y
+X secrete by Y	X spread by Y
+Y inhibit by X	Y transmit by X
+Y cause X	Y treat X
+X afford Y	X use Y
+Y accompany by X	Y introduce by X
+Y carry by X	Y precipitate by X
+X eradicate Y	X help Y
+Y aggravate X	Y relieve X
+X license for Y	X require for Y
+X pass through Y	X spread through Y
+X induce Y	X stimulate Y
+X give Y	X receive Y
+Y cure with X	Y relieve with X
+X characterize by Y	X secrete by Y
+Y make from X	Y result from X
+X correct Y	X invent Y
+X provide by Y	X secrete by Y
+X need for Y	X take for Y
+Y infect with X	Y treat with X
+Y be from X	Y obtain from X
+X derive from Y	X result from Y
+Y contain X	Y develop X
+X correct with Y	X infect with Y
+X achieve with Y	X alternate with Y
+Y bring X	Y mimic X
+X control Y	X cover Y
+Y die from X	Y prepare from X
+Y accompany X	Y eliminate X
+Y infect X	Y introduce X
+X cover Y	X inactivate Y
+Y cure by X	Y kill by X
+X alternate with Y	X come with Y
+X attack with Y	X complicate with Y
+X make Y	X precipitate Y
+X achieve with Y	X confound with Y
+Y control X	Y provide X
+X associate Y	X eliminate Y
+X join with Y	X relieve with Y
+Y get X	Y inactivate X
+Y occur X	Y precede X
+Y inactivate by X	Y make by X
+X break Y	X include Y
+X eliminate Y	X invent Y
+X inhibit Y	X relieve Y
+Y infect X	Y simulate X
+X combine with Y	X see with Y
+X define as Y	X give as Y
+X affect by Y	X control by Y
+Y afford X	Y imply X
+Y inactivate X	Y reduce X
+X exacerbate Y	X find Y
+X control with Y	X start with Y
+X secrete Y	X transmit Y
+Y cover X	Y reduce X
+X simulate Y	X take Y
+Y afford X	Y have X
+X begin with Y	X see with Y
+Y alternate with X	Y start with X
+Y affect X	Y enter X
+X cure with Y	X infect with Y
+X prevent Y	X suggest Y
+X administer with Y	X obtain with Y
+Y die from X	Y distinguish from X
+Y cause by X	Y overcome by X
+X affect with Y	X correct with Y
+X carry by Y	X produce by Y
+X break Y	X cure Y
+X accompany with Y	X control with Y
+X affect Y	X present Y
+Y introduce X	Y make X
+Y carry X	Y give X
+Y be in X	Y see in X
+X inhibit Y	X penetrate Y
+X convert to Y	X predispose to Y
+Y cause by X	Y manifest by X
+Y afford X	Y use X
+X give Y	X transmit Y
+X prevent Y	X provide Y
+Y mimic X	Y transmit X
+Y convert by X	Y hydrolyze by X
+X inhibit Y	X release Y
+Y attack X	Y use X
+X inhibit by Y	X precede by Y
+X cause by Y	X secrete by Y
+X characterize by Y	X control by Y
+X induce by Y	X introduce by Y
+X control Y	X penetrate Y
+X spread Y	X transmit Y
+Y bring X	Y precede X
+X develop Y	X make Y
+Y afford X	Y transmit X
+Y aggravate X	Y meet X
+Y come with X	Y correct with X
+X attend with Y	X control with Y
+X observe in Y	X terminate in Y
+X precipitate by Y	X produce by Y
+Y imply X	Y introduce X
+X correct by Y	X fertilize by Y
+X form from Y	X synthesize from Y
+X alternate with Y	X use with Y
+X cause by Y	X correct by Y
+X control by Y	X secrete by Y
+Y alleviate X	Y convert X
+X aggravate Y	X fight Y
+X recommend for Y	X take for Y
+X eradicate Y	X manufacture Y
+Y control by X	Y prevent by X
+X alternate with Y	X join with Y
+Y get X	Y show X
+Y cover X	Y eliminate X
+Y occur X	Y present X
+X bring Y	X fertilize Y
+X affect in Y	X indicate in Y
+Y manifest by X	Y treat by X
+X cover Y	X treat Y
+Y consist of X	Y die of X
+Y correct by X	Y precipitate by X
+Y indicate X	Y penetrate X
+X decrease Y	X suppress Y
+X invent Y	X produce Y
+X get Y	X mask Y
+Y find in X	Y produce in X
+X obtain with Y	X use with Y
+Y provide X	Y reduce X
+Y manufacture X	Y relieve X
+Y resemble X	Y wipe X
+Y eradicate X	Y resemble X
+X contain Y	X control Y
+Y control by X	Y make by X
+Y inhibit by X	Y overcome by X
+Y accompany X	Y penetrate X
+X affect Y	X trigger Y
+X have Y	X suppress Y
+X find in Y	X metabolize in Y
+X contract Y	X reach Y
+Y follow X	Y meet X
+X get Y	X secrete Y
+X find in Y	X use in Y
+Y accompany by X	Y make by X
+X administer with Y	X see with Y
+X occur during Y	X use during Y
+X accompany Y	X prevent Y
+Y need for X	Y reserve for X
+Y afford by X	Y precipitate by X
+X require Y	X spread Y
+X encounter Y	X fertilize Y
+Y introduce X	Y require X
+X contribute to Y	X transmit to Y
+X form from Y	X prepare from Y
+X ejaculate Y	X require Y
+X form from Y	X obtain from Y
+X cause by Y	X control by Y
+X mean Y	X meet Y
+Y carry by X	Y transmit by X
+X eradicate Y	X require Y
+Y complicate by X	Y hydrolyze by X
+X give with Y	X unite with Y
+X enter Y	X reduce Y
+Y accompany X	Y offer X
+X suggest Y	X suppress Y
+Y improve X	Y wipe X
+Y be with X	Y relieve with X
+Y contribute to X	Y respond to X
+X associate Y	X kill Y
+X follow by Y	X introduce by Y
+X accompany with Y	X use with Y
+Y achieve with X	Y manage with X
+Y differentiate from X	Y make from X
+Y infect X	Y relieve X
+Y manufacture X	Y offer X
+Y complicate X	Y hydrolyze X
+Y precede by X	Y precipitate by X
+Y cure X	Y resemble X
+Y accompany X	Y cure X
+Y penetrate X	Y show X
+Y characterize by X	Y inhibit by X
+X precipitate Y	X treat Y
+X come with Y	X use with Y
+X alternate with Y	X treat with Y
+X control Y	X precede Y
+Y require for X	Y reserve for X
+Y involve X	Y resemble X
+X cause Y	X contract Y
+Y begin with X	Y treat with X
+Y attack X	Y produce X
+Y produce X	Y relieve X
+X follow by Y	X penetrate by Y
+X make Y	X show Y
+X characterize by Y	X complicate by Y
+Y come with X	Y infect with X
+Y accompany by X	Y hydrolyze by X
+Y precipitate by X	Y provide by X
+X reduce Y	X treat Y
+X inactivate Y	X induce Y
+X mimic Y	X occur Y
+X complicate with Y	X occur with Y
+X cause by Y	X penetrate by Y
+X follow Y	X penetrate Y
+Y complicate by X	Y inhibit by X
+X confuse with Y	X treat with Y
+Y correct X	Y precede X
+X encounter Y	X stimulate Y
+X differ from Y	X obtain from Y
+Y alleviate X	Y inactivate X
+Y complicate X	Y develop X
+X help with Y	X unite with Y
+Y involve X	Y provide X
+X correct by Y	X overcome by Y
+Y precipitate by X	Y secrete by X
+X break Y	X find Y
+X affect with Y	X attend with Y
+X affect with Y	X be with Y
+X give to Y	X progress to Y
+Y afford by X	Y correct by X
+Y accompany by X	Y inhibit by X
+X induce by Y	X kill by Y
+Y convert X	Y suppress X
+X alleviate Y	X cover Y
+Y afford X	Y control X
+Y fertilize by X	Y overcome by X
+Y develop from X	Y die from X
+X die from Y	X result from Y
+X prevent by Y	X provide by Y
+X encounter Y	X penetrate Y
+Y aggravate X	Y offer X
+X attend with Y	X respond with Y
+Y transmit X	Y use X
+Y recommend for X	Y substitute for X
+Y cause X	Y resemble X
+X introduce by Y	X metabolize by Y
+X characterize by Y	X induce by Y
+Y complicate X	Y mask X
+Y penetrate by X	Y produce by X
+Y complicate by X	Y kill by X
+Y decrease X	Y suggest X
+X break Y	X precede Y
+Y come from X	Y die from X
+X alternate with Y	X attend with Y
+Y show X	Y use X
+X convert by Y	X introduce by Y
+X come with Y	X cure with Y
+X increase Y	X spread Y
+Y precede by X	Y produce by X
+X license for Y	X mistake for Y
+X form from Y	X isolate from Y
+X produce by Y	X treat by Y
+Y accompany with X	Y achieve with X
+X penetrate Y	X suggest Y
+Y help X	Y provide X
+Y manifest by X	Y produce by X
+Y correct by X	Y transmit by X
+X mimic Y	X reach Y
+X kill by Y	X metabolize by Y
+X follow Y	X meet Y
+Y provide X	Y simulate X
+Y attribute to X	Y contribute to X
+Y form from X	Y make from X
+X give with Y	X respond with Y
+X derive from Y	X suffer from Y
+X cover Y	X help Y
+X bring Y	X discharge Y
+Y decrease X	Y follow X
+Y follow by X	Y inactivate by X
+X accompany by Y	X hydrolyze by Y
+X infect with Y	X obtain with Y
+Y offer X	Y release X
+Y cause X	Y introduce X
+X digest Y	X encounter Y
+X increase Y	X indicate Y
+X give to Y	X transmit to Y
+Y give X	Y imply X
+X infect Y	X suggest Y
+X complicate Y	X include Y
+X fight Y	X promote Y
+Y differ from X	Y obtain from X
+Y derive from X	Y differ from X
+Y produce X	Y transmit X
+X contain Y	X precede Y
+Y manage with X	Y present with X
+Y provide X	Y show X
+X fertilize by Y	X overcome by Y
+Y alleviate X	Y present X
+Y progress to X	Y succeed to X
+X overcome by Y	X provide by Y
+X fertilize Y	X prevent Y
+Y afford X	Y complicate X
+X administer for Y	X substitute for Y
+Y penetrate X	Y provide X
+X introduce Y	X kill Y
+X cause Y	X control Y
+Y afford X	Y precede X
+X confine to Y	X turn to Y
+Y cover X	Y imply X
+X afford Y	X complicate Y
+Y convert X	Y prevent X
+Y alleviate X	Y transmit X
+Y derive from X	Y distinguish from X
+X carry by Y	X precipitate by Y
+Y cover X	Y penetrate X
+Y inactivate X	Y involve X
+X afford Y	X exacerbate Y
+Y achieve with X	Y treat with X
+X correct with Y	X join with Y
+Y cure X	Y present X
+X find Y	X make Y
+Y aggravate X	Y cover X
+X affect by Y	X precipitate by Y
+X relate to Y	X turn to Y
+X present with Y	X relieve with Y
+Y reduce X	Y show X
+X kill Y	X simulate Y
+X fertilize by Y	X induce by Y
+X consist of Y	X make of Y
+Y achieve with X	Y relieve with X
+X obtain with Y	X respond with Y
+Y convert by X	Y precede by X
+X invent Y	X make Y
+X be of Y	X consist of Y
+X form from Y	X transmit from Y
+X digest Y	X reach Y
+X affect Y	X enter Y
+Y cause X	Y develop X
+Y afford by X	Y convert by X
+X achieve with Y	X complicate with Y
+Y hydrolyze by X	Y overcome by X
+Y correct by X	Y overcome by X
+X infect Y	X introduce Y
+X eliminate Y	X reduce Y
+Y cause by X	Y precede by X
+X be in Y	X metabolize in Y
+Y inhibit by X	Y kill by X
+Y eradicate X	Y introduce X
+X control Y	X suggest Y
+X fertilize by Y	X manifest by Y
+X develop Y	X include Y
+X make from Y	X protect from Y
+X improve Y	X inactivate Y
+Y afford X	Y inhibit X
+Y eliminate X	Y simulate X
+X produce in Y	X use in Y
+X decrease Y	X precede Y
+X invent Y	X mask Y
+Y mask X	Y mimic X
+X complicate with Y	X start with Y
+Y complicate X	Y present X
+Y imply X	Y make X
+Y attack X	Y hydrolyze X
+X ejaculate Y	X follow Y
+X confine to Y	X refer to Y
+Y convert X	Y require X
+X find Y	X precipitate Y
+X affect by Y	X convert by Y
+Y imply X	Y mean X
+X introduce Y	X present Y
+Y meet X	Y reduce X
+X begin as Y	X know as Y
+Y convert to X	Y refer to X
+X discover Y	X ejaculate Y
+Y achieve with X	Y combine with X
+X destroy Y	X infect Y
+X aggravate Y	X alleviate Y
+Y induce by X	Y precipitate by X
+X inhibit Y	X kill Y
+X confuse with Y	X help with Y
+Y involve X	Y simulate X
+Y cover X	Y involve X
+X need for Y	X substitute for Y
+X be from Y	X transmit from Y
+Y aggravate X	Y mask X
+Y occur X	Y penetrate X
+Y complicate with X	Y give with X
+Y convert to X	Y relate to X
+X cure by Y	X inhibit by Y
+X inhibit by Y	X penetrate by Y
+X contract Y	X find Y
+X cause by Y	X inactivate by Y
+X inhibit Y	X reduce Y
+X associate with Y	X be with Y
+X associate Y	X convert Y
+X control Y	X stimulate Y
+Y affect with X	Y present with X
+Y afford X	Y penetrate X
+Y decrease X	Y penetrate X
+X develop from Y	X prepare from Y
+X accompany with Y	X affect with Y
+X help Y	X take Y
+Y contribute to X	Y give to X
+Y be in X	Y occur in X
+X penetrate Y	X precipitate Y
+X accompany Y	X wipe Y
+X bring Y	X involve Y
+Y confuse with X	Y give with X
+X expose to Y	X predispose to Y
+Y aggravate X	Y simulate X
+X relieve with Y	X unite with Y
+X relieve Y	X show Y
+Y accompany with X	Y associate with X
+Y predispose to X	Y respond to X
+Y present X	Y relieve X
+X herald by Y	X manifest by Y
+Y contain X	Y simulate X
+X contain Y	X destroy Y
+X ejaculate Y	X use Y
+X transmit by Y	X treat by Y
+Y secrete by X	Y treat by X
+X treat with Y	X unite with Y
+X complicate with Y	X cure with Y
+X give to Y	X succeed to Y
+X discover Y	X kill Y
+X convert Y	X transmit Y
+Y infect X	Y offer X
+X find Y	X include Y
+X discover Y	X inactivate Y
+X describe as Y	X give as Y
+X kill Y	X release Y
+X imply Y	X mimic Y
+X affect Y	X suppress Y
+Y give X	Y have X
+Y characterize by X	Y complicate by X
+Y accompany with X	Y confound with X
+Y control by X	Y precede by X
+X contract Y	X give Y
+X afford by Y	X inhibit by Y
+X carry by Y	X convert by Y
+X get Y	X meet Y
+Y control by X	Y produce by X
+Y introduce X	Y transmit X
+Y afford by X	Y treat by X
+X appear in Y	X observe in Y
+X metabolize by Y	X precipitate by Y
+X metabolize in Y	X occur in Y
+X confine to Y	X metabolize to Y
+X correct by Y	X provide by Y
+X make from Y	X occur from Y
+X associate Y	X indicate Y
+Y distinguish from X	Y occur from X
+X control by Y	X fertilize by Y
+X be from Y	X protect from Y
+Y fertilize by X	Y spread by X
+Y develop X	Y make X
+Y occur from X	Y suffer from X
+Y cause by X	Y convert by X
+X exacerbate Y	X reduce Y
+Y imply X	Y occur X
+X encounter Y	X receive Y
+Y inactivate by X	Y overcome by X
+X metabolize by Y	X spread by Y
+Y correct X	Y cover X
+X fertilize Y	X introduce Y
+Y be from X	Y suffer from X
+Y follow X	Y imply X
+X manifest by Y	X metabolize by Y
+X form from Y	X suffer from Y
+Y reserve for X	Y substitute for X
+X digest Y	X eradicate Y
+Y make from X	Y obtain from X
+X secrete Y	X trigger Y
+X appear in Y	X occur in Y
+X progress to Y	X relate to Y
+Y occur with X	Y start with X
+Y penetrate by X	Y secrete by X
+Y confound with X	Y manage with X
+X distinguish from Y	X result from Y
+X occur Y	X penetrate Y
+X distinguish from Y	X provide from Y
+X improve Y	X reduce Y
+Y simulate X	Y use X
+X manufacture Y	X meet Y
+Y control with X	Y occur with X
+Y infect X	Y show X
+X observe in Y	X use in Y
+Y give X	Y help X
+X distinguish from Y	X prepare from Y
+X encounter Y	X exacerbate Y
+Y improve X	Y inactivate X
+X bring Y	X stimulate Y
+X offer Y	X relieve Y
+X develop Y	X dilate Y
+X begin with Y	X treat with Y
+X break Y	X help Y
+Y isolate from X	Y provide from X
+Y release X	Y resemble X
+X develop with Y	X join with Y
+Y correct X	Y mask X
+X affect in Y	X be in Y
+Y recommend for X	Y require for X
+X correct Y	X involve Y
+X contract Y	X receive Y
+X reduce to Y	X transmit to Y
+Y order for X	Y take for X
+Y get X	Y transmit X
+X introduce by Y	X produce by Y
+X occur Y	X promote Y
+Y inactivate X	Y infect X
+X afford by Y	X spread by Y
+Y contain X	Y receive X
+X associate with Y	X relieve with Y
+Y include X	Y mimic X
+Y occur with X	Y present with X
+Y contain X	Y infect X
+Y destroy X	Y indicate X
+Y attribute to X	Y succeed to X
+X associate Y	X spread Y
+Y imply X	Y mimic X
+X destroy Y	X produce Y
+Y kill by X	Y treat by X
+Y eradicate X	Y meet X
+X hydrolyze Y	X improve Y
+X metabolize by Y	X treat by Y
+Y carry by X	Y precede by X
+X confuse with Y	X relieve with Y
+X result from Y	X transmit from Y
+X penetrate by Y	X relieve by Y
+X complicate Y	X receive Y
+X occur Y	X require Y
+Y accompany X	Y afford X
+Y eradicate X	Y simulate X
+X discover Y	X precipitate Y
+X contain Y	X discharge Y
+Y administer for X	Y recommend for X
+X administer during Y	X be during Y
+Y afford by X	Y fertilize by X
+X associate with Y	X unite with Y
+X convert Y	X reach Y
+X involve Y	X offer Y
+Y make by X	Y precede by X
+X provide Y	X spread Y
+X receive Y	X suggest Y
+Y obtain with X	Y use with X
+Y control with X	Y unite with X
+Y control by X	Y manifest by X
+X introduce Y	X offer Y
+Y afford X	Y hydrolyze X
+X hydrolyze by Y	X make by Y
+X attribute to Y	X contribute to Y
+X induce Y	X introduce Y
+Y mimic X	Y use X
+Y alleviate X	Y decrease X
+X die from Y	X distinguish from Y
+Y correct X	Y occur X
+Y offer X	Y simulate X
+X protect from Y	X result from Y
+Y indicate X	Y meet X
+X eliminate Y	X indicate Y
+Y contain X	Y produce X
+Y cure X	Y treat X
+Y mean X	Y treat X
+Y cure by X	Y precede by X
+X develop Y	X mask Y
+X receive Y	X relieve Y
+X provide by Y	X relieve by Y
+X alternate with Y	X manage with Y
+Y form from X	Y suffer from X
+X accompany with Y	X combine with Y
+X complicate Y	X introduce Y
+Y give with X	Y manage with X
+X be from Y	X derive from Y
+X mean Y	X simulate Y
+X present Y	X take Y
+X characterize by Y	X prevent by Y
+X metabolize to Y	X relate to Y
+Y control X	Y mask X
+Y fertilize X	Y include X
+X metabolize in Y	X use in Y
+Y complicate X	Y introduce X
+Y differentiate from X	Y obtain from X
+X alternate with Y	X give with Y
+X differ from Y	X occur from Y
+X associate with Y	X start with Y
+Y overcome by X	Y prevent by X
+Y develop into X	Y inject into X
+X mistake for Y	X need for Y
+X give for Y	X substitute for Y
+Y complicate by X	Y manifest by X
+X contribute to Y	X metabolize to Y
+Y carry by X	Y make by X
+Y distinguish from X	Y provide from X
+X imply Y	X produce Y
+Y accompany X	Y have X
+X have Y	X help Y
+X refer to Y	X succeed to Y
+X reduce Y	X transmit Y
+Y begin with X	Y obtain with X
+Y characterize by X	Y spread by X
+X affect with Y	X obtain with Y
+Y afford by X	Y precede by X
+X alleviate Y	X hydrolyze Y
+X mask Y	X secrete Y
+Y accompany by X	Y treat by X
+Y be in X	Y terminate in X
+X enter Y	X involve Y
+X reach Y	X simulate Y
+X confound with Y	X cure with Y
+X achieve with Y	X control with Y
+X administer to Y	X lead to Y
+X correct with Y	X develop with Y
+X confound with Y	X obtain with Y
+X meet Y	X promote Y
+Y be from X	Y isolate from X
+X afford Y	X have Y
+Y refer to X	Y succeed to X
+Y achieve with X	Y be with X
+Y manufacture X	Y receive X
+X complicate with Y	X infect with Y
+Y offer X	Y relieve X
+Y affect X	Y bring X
+X correct with Y	X start with Y
+X alleviate Y	X transmit Y
+X help with Y	X relieve with Y
+X alternate with Y	X help with Y
+X administer for Y	X develop for Y
+Y make X	Y take X
+Y aggravate X	Y prevent X
+Y find in X	Y occur in X
+X begin with Y	X come with Y
+X control Y	X introduce Y
+Y develop X	Y show X
+Y precede by X	Y relieve by X
+X confuse with Y	X present with Y
+X require for Y	X take for Y
+X inactivate Y	X secrete Y
+Y cure X	Y relieve X
+Y convert by X	Y kill by X
+X manufacture Y	X replace Y
+Y provide X	Y suggest X
+X suppress Y	X transmit Y
+X associate Y	X reduce Y
+Y make by X	Y produce by X
+X afford by Y	X correct by Y
+X convert into Y	X turn into Y
+X control by Y	X provide by Y
+Y control X	Y receive X
+Y make from X	Y provide from X
+X develop for Y	X need for Y
+X follow Y	X induce Y
+Y eradicate X	Y kill X
+X enter Y	X resemble Y
+X cure by Y	X hydrolyze by Y
+Y carry by X	Y complicate by X
+X increase Y	X promote Y
+X develop Y	X receive Y
+Y cure X	Y eradicate X
+X cure Y	X dilate Y
+Y affect with X	Y join with X
+X administer with Y	X confound with Y
+X develop into Y	X release into Y
+X come from Y	X make from Y
+X indicate Y	X precede Y
+X complicate Y	X contract Y
+Y introduce X	Y meet X
+Y associate with X	Y combine with X
+X cause Y	X indicate Y
+X begin as Y	X manifest as Y
+Y control X	Y suppress X
+Y destroy X	Y inactivate X
+X give Y	X reduce Y
+Y induce by X	Y produce by X
+X convert by Y	X cure by Y
+X destroy Y	X develop Y
+X appear in Y	X use in Y
+X affect in Y	X use in Y
+Y induce X	Y relieve X
+X need for Y	X recommend for Y
+Y develop in X	Y occur in X
+Y give for X	Y reserve for X
+Y cause X	Y manufacture X
+Y decrease X	Y induce X
+Y correct X	Y give X
+Y need for X	Y order for X
+Y correct by X	Y prevent by X
+X differentiate from Y	X form from Y
+Y contribute to X	Y predispose to X
+Y prevent by X	Y spread by X
+Y imply X	Y infect X
+X reach Y	X wipe Y
+Y contribute to X	Y refer to X
+Y result in X	Y see in X
+X refer to Y	X turn to Y
+X attack with Y	X come with Y
+X inactivate Y	X provide Y
+Y be in X	Y use in X
+X appear as Y	X begin as Y
+Y get X	Y use X
+Y achieve with X	Y join with X
+X mimic Y	X wipe Y
+Y have X	Y show X
+X control Y	X use Y
+Y alleviate X	Y simulate X
+X carry Y	X take Y
+X eradicate Y	X spread Y
+Y be for X	Y reserve for X
+X digest Y	X ejaculate Y
+X confound with Y	X control with Y
+Y fertilize X	Y produce X
+X manage with Y	X use with Y
+Y cure by X	Y produce by X
+X get Y	X replace Y
+X inhibit by Y	X kill by Y
+X accompany with Y	X administer with Y
+Y prevent X	Y simulate X
+Y associate with X	Y start with X
+Y alleviate X	Y penetrate X
+X accompany Y	X resemble Y
+X convert by Y	X kill by Y
+Y fertilize X	Y simulate X
+Y hydrolyze X	Y present X
+X make by Y	X manifest by Y
+Y present X	Y transmit through X
+X relieve Y	Y resemble X
+Y bring X	Y induce by X
+X make by Y	X precede by Y
+Y control with X	Y manifest by X
+Y act as X	Y alternate with X
+Y cure X	Y develop from X
+X break Y	X exacerbate Y
+X derive from Y	Y cause by X
+X compose of Y	Y infect X
+X follow Y	X inject into Y
+X differentiate from Y	X indicate Y
+X compose of Y	Y associate with X
+X convert Y	Y occur with X
+X use as Y	Y carry X
+Y cure with X	Y manifest by X
+X mimic Y	X present with Y
+Y be from X	Y mean X
+Y cause by X	Y refer to X
+X inhibit Y	Y complicate by X
+Y inhibit by X	Y penetrate by X
+Y contain X	Y respond to X
+Y die of X	Y transmit by X
+X accompany by Y	X develop into Y
+X give during Y	Y obtain from X
+X combine with Y	X follow Y
+Y overcome by X	Y use in X
+X cure with Y	Y consist of X
+X cure Y	X develop from Y
+X substitute for Y	Y result from X
+X accompany Y	X meet Y
+X break Y	Y suffer from X
+X attribute to Y	X correct with Y
+X trigger Y	Y penetrate by X
+X release into Y	X reserve for Y
+X start with Y	Y develop with X
+X license for Y	X metabolize in Y
+X transmit to Y	Y make from X
+X contribute to Y	X help Y
+X produce in Y	Y alleviate X
+X prescribe for Y	Y meet X
+X prevent Y	Y have X
+X offer Y	X stimulate Y
+X manage with Y	Y protect against X
+X manufacture Y	X use as Y
+X bring Y	X use with Y
+Y complicate by X	Y show X
+X find in Y	Y provide by X
+X develop in Y	Y correct X
+X inhibit by Y	Y produce by X
+X cure Y	Y hydrolyze by X
+X require for Y	Y provide X
+X take for Y	Y form from X
+X imply Y	Y occur X
+X control Y	Y fertilize X
+Y aggravate X	Y suppress X
+X require Y	Y derive from X
+X affect in Y	Y require for X
+X precede Y	Y relate to X
+X spread by Y	Y mask X
+X occur during Y	Y differ from X
+X release into Y	Y induce X
+Y alleviate X	Y result in X
+X ejaculate Y	Y use X
+X predispose to Y	X present as Y
+X differentiate from Y	Y wipe X
+X administer before Y	Y isolate from X
+X encounter Y	X respond to Y
+X pass through Y	X use for Y
+X accompany with Y	X employ as Y
+X make of Y	Y carry X
+X come with Y	X metabolize to Y
+X precede by Y	Y transmit through X
+X improve Y	Y treat by X
+X transmit via Y	Y use X
+X administer during Y	Y complicate with X
+X alleviate Y	X infect Y
+X infect with Y	Y decrease X
+X suffer from Y	Y cure X
+X associate with Y	X promote Y
+Y get X	Y give with X
+X improve Y	X infect with Y
+X be after Y	Y convert X
+Y be against X	Y present as X
+X afford by Y	Y relieve with X
+Y inactivate X	Y use for X
+X start with Y	Y compose of X
+X secrete into Y	Y convert to X
+X die from Y	X terminate in Y
+X stimulate Y	Y join with X
+Y decrease X	Y result from X
+Y affect X	Y kill X
+X confine to Y	Y penetrate by X
+X appear as Y	X precipitate Y
+X afford Y	Y confuse with X
+Y imply X	Y succeed to X
+X derive from Y	Y have X
+X differ from Y	Y inhibit X
+Y reduce X	Y reserve for X
+X carry by Y	X convert to Y
+X refer to Y	Y produce in X
+X control Y	Y receive X
+X base on Y	X respond with Y
+Y correct with X	Y hydrolyze X
+X be during Y	X manifest as Y
+X complicate Y	Y relieve X
+X inhibit by Y	Y administer for X
+X employ as Y	Y refer to X
+Y consist of X	Y develop X
+X administer to Y	Y inhibit by X
+X mistake for Y	Y progress to X
+Y differentiate from X	Y recommend for X
+X manufacture Y	Y suppress X
+Y hydrolyze X	Y suggest X
+X develop into Y	Y terminate in X
+Y carry X	Y include X
+X precede Y	X unite with Y
+X administer for Y	Y develop with X
+X provide Y	X reduce to Y
+Y die from X	Y progress to X
+X be during Y	Y die of X
+X be from Y	X eliminate Y
+Y make from X	Y present with X
+X cure with Y	X transmit to Y
+X indicate in Y	Y induce by X
+X carry by Y	X die from Y
+X associate with Y	X respond with Y
+X inhibit Y	Y compose of X
+X enter Y	Y find in X
+X reach Y	X treat Y
+X die from Y	Y correct by X
+Y isolate from X	Y provide by X
+X accompany by Y	Y progress to X
+X infect with Y	X manage with Y
+X occur in Y	Y alternate with X
+X contribute to Y	X obtain with Y
+X spread by Y	Y attribute to X
+Y get X	Y progress to X
+X cause by Y	Y attack X
+X spread Y	Y use with X
+X characterize by Y	X contract Y
+X dilate Y	Y induce by X
+X cause by Y	X discover Y
+X manufacture Y	Y cause X
+X affect Y	Y convert X
+X develop into Y	Y manifest by X
+X administer before Y	Y occur X
+X follow by Y	Y correct with X
+X predispose to Y	X show Y
+X carry Y	Y secrete X
+X hydrolyze Y	Y indicate X
+X make from Y	Y progress to X
+Y cure X	Y enter X
+X ejaculate Y	Y isolate from X
+Y inhibit by X	Y lead to X
+X convert to Y	X make of Y
+X avoid in Y	X present Y
+X invent Y	Y have X
+X differentiate from Y	X inhibit by Y
+X cover Y	Y attack X
+X manifest by Y	X recommend for Y
+X give Y	Y produce in X
+X distinguish from Y	X infect Y
+X eradicate Y	Y show X
+X differ from Y	X kill by Y
+X include Y	Y give X
+X indicate for Y	X reserve for Y
+X come from Y	X take for Y
+X offer Y	Y be with X
+X occur from Y	X penetrate by Y
+X secrete Y	X use as Y
+Y convert to X	Y prevent by X
+Y fertilize by X	Y produce X
+X alternate with Y	X develop with Y
+Y bring X	Y produce in X
+X describe as Y	X prevent Y
+Y accompany with X	Y be after X
+X fight Y	Y give to X
+X occur during Y	X require Y
+Y cure with X	Y precede by X
+Y eradicate X	Y occur in X
+X fertilize by Y	X involve Y
+X occur Y	Y give for X
+X transmit via Y	Y affect with X
+Y introduce by X	Y prevent by X
+X induce Y	Y occur from X
+X combine with Y	X turn into Y
+X fight Y	Y mean X
+X follow by Y	X include Y
+X increase Y	X spread through Y
+X aggravate Y	Y use against X
+X contract Y	X unite with Y
+Y convert to X	Y develop from X
+X discover Y	X substitute for Y
+X cover Y	X spread through Y
+X meet Y	Y carry X
+X precipitate by Y	Y associate with X
+X prescribe for Y	Y develop from X
+Y carry by X	Y take X
+X alleviate Y	X meet Y
+X confine to Y	Y give to X
+X overcome by Y	Y convert into X
+Y reserve for X	Y take X
+X act as Y	X develop Y
+X relate to Y	X substitute for Y
+X need for Y	X observe in Y
+Y decrease X	Y take for X
+X complicate with Y	X discover Y
+X overcome by Y	Y treat X
+X develop for Y	X make by Y
+X spread through Y	Y affect X
+X discover Y	Y kill by X
+X affect by Y	X resemble Y
+Y contain X	Y precede X
+X see in Y	Y cause by X
+X require Y	Y infect X
+X protect against Y	X stimulate Y
+X help with Y	Y produce in X
+X improve Y	Y indicate X
+X predispose to Y	Y come with X
+X observe in Y	X suppress Y
+X protect from Y	Y encounter X
+X appear in Y	X lead to Y
+Y secrete X	Y use in X
+Y take X	Y use for X
+X confuse with Y	X treat by Y
+X relate to Y	X relieve Y
+X induce Y	Y meet X
+X protect from Y	Y be in X
+X afford Y	Y cause by X
+X develop for Y	X turn into Y
+X develop in Y	Y use against X
+X lead to Y	Y simulate X
+Y combine with X	Y give X
+X enter Y	X use during Y
+Y attribute to X	Y kill X
+X convert into Y	X cover Y
+X mistake for Y	Y develop into X
+X avoid in Y	Y occur X
+X combine with Y	X make of Y
+Y manifest by X	Y occur during X
+X create Y	Y order for X
+X occur during Y	X see with Y
+X develop from Y	X progress to Y
+X accompany Y	X show Y
+X cure with Y	Y develop from X
+X die from Y	X license for Y
+X carry Y	X make from Y
+X discharge Y	X give to Y
+X expose to Y	Y relieve X
+X combine with Y	X require for Y
+X herald by Y	Y indicate X
+X derive from Y	Y fertilize X
+Y afford by X	Y provide from X
+X predispose to Y	Y metabolize to X
+X accompany with Y	X succeed to Y
+X develop Y	X occur after Y
+Y affect in X	Y fertilize by X
+X produce in Y	Y give X
+X find Y	Y treat X
+X start with Y	Y die of X
+X prepare from Y	Y produce X
+X spread Y	Y have X
+X help with Y	Y manage with X
+X complicate Y	Y treat with X
+X convert by Y	X prevent by Y
+X manufacture Y	Y manage with X
+X correct Y	X protect against Y
+X metabolize in Y	Y mean X
+X introduce Y	Y suggest X
+Y distinguish from X	Y prescribe for X
+Y induce by X	Y respond to X
+X release into Y	Y combine with X
+X produce in Y	Y accompany X
+X be with Y	X occur during Y
+X take for Y	Y die of X
+Y carry X	Y introduce X
+X affect with Y	X get Y
+Y compose of X	Y simulate X
+X differentiate from Y	Y manufacture X
+X give to Y	X precede by Y
+X obtain with Y	X penetrate Y
+X transmit to Y	Y present as X
+X accompany Y	Y confound with X
+Y come from X	Y kill X
+X promote Y	Y treat by X
+X break Y	Y cure with X
+X correct with Y	X give before Y
+X distinguish from Y	X transmit through Y
+X associate with Y	X find Y
+X license for Y	X require Y
+X come from Y	X obtain from Y
+X present with Y	Y destroy X
+X digest Y	X release into Y
+X define as Y	X introduce by Y
+X manage with Y	X prevent by Y
+Y distinguish from X	Y present X
+X alleviate Y	X suggest Y
+X increase Y	X relate to Y
+X develop for Y	X differentiate from Y
+X promote Y	Y eradicate X
+X unite with Y	Y produce in X
+X confound with Y	X spread by Y
+X carry by Y	Y penetrate X
+X occur during Y	Y fertilize by X
+X complicate with Y	Y infect with X
+Y develop X	Y relieve with X
+X provide by Y	Y overcome by X
+X administer during Y	Y penetrate by X
+X develop after Y	X mask Y
+X convert by Y	Y be from X
+X present with Y	X treat by Y
+X secrete into Y	Y fertilize by X
+X administer before Y	X synthesize from Y
+Y destroy X	Y differ from X
+X protect from Y	X release Y
+X avoid in Y	Y mask X
+X make Y	X release into Y
+X include Y	Y introduce X
+X contract Y	Y correct X
+Y order for X	Y transmit by X
+X secrete Y	X transmit via Y
+X precipitate by Y	Y mistake for X
+X stimulate Y	Y hydrolyze by X
+X need for Y	Y provide from X
+X penetrate by Y	Y accompany X
+X constrict Y	Y obtain with X
+X differentiate from Y	X release into Y
+X wipe Y	Y make by X
+X present with Y	Y reserve for X
+X bring Y	Y distinguish from X
+X achieve with Y	X decrease Y
+X observe in Y	Y help X
+X include Y	Y cause X
+X enter Y	X turn to Y
+Y consist of X	Y precipitate by X
+Y induce X	Y respond to X
+X require Y	X secrete into Y
+X attack with Y	X spread Y
+X appear in Y	X introduce Y
+X control by Y	Y resemble X
+X show Y	X take for Y
+X attend with Y	X precede Y
+Y come from X	Y start with X
+X precipitate Y	Y fertilize by X
+X improve Y	X release into Y
+X observe in Y	Y distinguish from X
+X kill by Y	Y manifest by X
+X affect in Y	Y prescribe for X
+X indicate in Y	Y act as X
+X differentiate from Y	X kill Y
+X order for Y	X reduce to Y
+X administer to Y	X result from Y
+X know as Y	X metabolize by Y
+X alternate with Y	Y correct by X
+X constrict Y	Y combine with X
+X order for Y	Y infect X
+X alternate with Y	X wipe Y
+X progress to Y	Y inject into X
+X die of Y	X hydrolyze by Y
+X come with Y	X convert Y
+X cure by Y	Y induce X
+X transmit Y	Y correct X
+X relieve with Y	Y succeed to X
+X infect with Y	X occur after Y
+X see with Y	Y find in X
+X help with Y	Y contribute to X
+Y present with X	Y unite with X
+Y produce in X	Y take for X
+Y infect with X	Y wipe X
+X use during Y	Y present X
+X see with Y	Y be after X
+X appear in Y	X break Y
+X metabolize in Y	X precipitate by Y
+X appear as Y	X cure with Y
+Y compose of X	Y indicate X
+Y correct with X	Y precede by X
+X complicate with Y	Y see in X
+X present as Y	X turn into Y
+X bring Y	Y indicate for X
+X observe in Y	Y use for X
+Y correct with X	Y join with X
+X license for Y	X release Y
+X affect by Y	X protect from Y
+X discharge Y	Y isolate from X
+X inactivate by Y	Y include X
+Y destroy X	Y introduce by X
+X bring Y	Y show X
+Y progress to X	Y treat X
+X contract Y	X replace Y
+X eliminate Y	Y occur from X
+X increase Y	Y be against X
+X make Y	Y contain X
+X turn to Y	Y achieve with X
+Y occur from X	Y relate to X
+X help with Y	Y form from X
+X attend with Y	Y offer X
+X predispose to Y	Y be for X
+X follow Y	X stimulate Y
+X require for Y	Y make from X
+X infect with Y	Y isolate from X
+Y find in X	Y mimic X
+X discover Y	X inhibit Y
+X transmit to Y	Y differ from X
+X attack Y	Y complicate by X
+X protect against Y	Y transmit by X
+X digest Y	Y encounter X
+X infect Y	X introduce by Y
+X accompany with Y	X provide from Y
+X administer with Y	X fertilize by Y
+X reduce Y	Y need for X
+X convert into Y	Y develop after X
+X indicate in Y	X infect with Y
+X simulate Y	Y come from X
+Y correct by X	Y occur after X
+X get Y	X give Y
+X administer with Y	Y hydrolyze X
+X get Y	X metabolize by Y
+X be for Y	Y confuse with X
+X involve Y	Y induce X
+Y compose of X	Y hydrolyze by X
+X show Y	Y prevent X
+X relate to Y	Y carry by X
+Y characterize by X	Y correct by X
+X metabolize to Y	Y act as X
+X produce Y	X substitute for Y
+Y aggravate X	Y use with X
+X administer during Y	X occur Y
+X mask Y	X obtain with Y
+X occur during Y	Y present as X
+X define as Y	X respond with Y
+X simulate Y	Y relate to X
+X transmit through Y	Y introduce by X
+X fight Y	X wipe Y
+X develop with Y	Y give X
+X produce Y	Y differentiate from X
+X aggravate Y	Y develop in X
+Y be against X	Y refer to X
+X bring Y	Y convert to X
+X take Y	Y alternate with X
+X carry by Y	X occur after Y
+X fertilize by Y	Y isolate from X
+X precipitate Y	X use with Y
+X join with Y	X make Y
+X manifest by Y	Y kill X
+X secrete by Y	Y distinguish from X
+X afford by Y	X spread through Y
+X describe as Y	Y control with X
+X develop in Y	Y bring X
+X occur with Y	Y control with X
+X relieve with Y	Y attack X
+X reduce Y	Y manifest as X
+X introduce by Y	Y afford by X
+X terminate in Y	Y introduce by X
+X give to Y	X prepare from Y
+Y accompany with X	Y use X
+X convert to Y	X prescribe for Y
+Y complicate with X	Y reduce X
+X complicate Y	X control with Y
+X follow by Y	X progress to Y
+X consist of Y	X find Y
+X isolate from Y	Y be against X
+X differentiate from Y	Y require X
+X develop Y	Y manifest by X
+Y inhibit X	Y mimic X
+X protect from Y	Y affect in X
+X occur with Y	X reach Y
+X follow by Y	Y kill X
+X refer to Y	Y take X
+X inhibit by Y	Y come from X
+X mask Y	Y mask X
+X penetrate Y	Y convert into X
+X confound with Y	Y develop with X
+Y fertilize by X	Y show X
+Y correct X	Y manage with X
+X manufacture Y	Y correct by X
+X transmit via Y	Y accompany by X
+X produce by Y	X wipe Y
+X give Y	Y relieve X
+X provide Y	X transmit by Y
+X spread Y	Y make X
+X invent Y	Y present with X
+X secrete Y	Y use as X
+X destroy Y	Y use as X
+X differ from Y	Y result from X
+X involve Y	X protect against Y
+X accompany by Y	X wipe Y
+X need for Y	Y prevent by X
+X spread Y	Y manage with X
+X die from Y	Y develop X
+Y eradicate X	Y transmit X
+X complicate by Y	X present with Y
+Y begin as X	Y destroy X
+X receive Y	X refer to Y
+X distinguish from Y	Y correct by X
+X afford Y	Y contribute to X
+X correct with Y	X get into Y
+Y confound with X	Y control X
+X carry Y	X transmit via Y
+Y be against X	Y come from X
+X reach Y	Y infect X
+X affect by Y	X metabolize by Y
+X hydrolyze by Y	Y confound with X
+X develop in Y	Y be after X
+X start with Y	Y convert X
+X combine with Y	Y fertilize X
+X affect by Y	X precipitate Y
+Y come with X	Y introduce by X
+Y occur after X	Y show X
+X trigger Y	Y affect with X
+X eliminate Y	Y require X
+Y reduce X	Y treat X
+X develop after Y	X see with Y
+X precede by Y	Y indicate X
+X have Y	Y result from X
+X die of Y	X start with Y
+Y hydrolyze by X	Y use X
+X eradicate Y	X meet Y
+X convert to Y	X kill Y
+X be from Y	Y succeed to X
+X afford by Y	X fertilize Y
+X simulate Y	Y be in X
+X herald by Y	X show Y
+Y complicate X	Y fertilize X
+X help Y	X respond with Y
+X differ from Y	Y occur in X
+X simulate Y	X transmit to Y
+X consist of Y	Y cure X
+Y complicate by X	Y overcome by X
+X mimic Y	Y progress to X
+Y respond to X	Y use X
+X develop Y	Y transmit by X
+X herald by Y	X simulate Y
+X be of Y	Y include X
+X achieve with Y	Y join with X
+X aggravate Y	Y eradicate X
+X provide from Y	Y eliminate X
+X use against Y	Y require for X
+X start before Y	Y relieve with X
+X be with Y	X prevent Y
+X reduce to Y	Y need for X
+X increase Y	Y show X
+Y accompany with X	Y improve X
+X control Y	Y improve X
+Y complicate with X	Y metabolize to X
+Y accompany X	Y decrease X
+X affect in Y	Y imply X
+X resemble Y	X suggest Y
+Y indicate for X	Y prevent X
+X be against Y	X join with Y
+X promote Y	Y precede by X
+Y present as X	Y prevent by X
+Y indicate for X	Y manufacture X
+X appear in Y	X penetrate by Y
+X protect against Y	Y improve X
+X trigger Y	Y use for X
+Y convert into X	Y define as X
+X relieve by Y	X reserve for Y
+X control with Y	Y occur X
+X confine to Y	X cure by Y
+X indicate Y	Y receive X
+Y make by X	Y present with X
+Y be with X	Y kill by X
+X constrict Y	Y occur during X
+X develop into Y	Y include X
+X precede Y	X recommend for Y
+X obtain from Y	Y develop after X
+X create Y	Y treat X
+X help with Y	Y occur in X
+X fight Y	X suppress Y
+X complicate Y	X indicate for Y
+X metabolize to Y	Y cure X
+X begin as Y	Y form from X
+X see with Y	Y suppress X
+X terminate in Y	Y hydrolyze X
+X herald by Y	Y kill by X
+X increase Y	Y make X
+X kill by Y	X occur Y
+X respond with Y	Y find in X
+X mimic Y	Y occur X
+X secrete Y	Y give for X
+X include Y	Y attribute to X
+X infect with Y	Y characterize by X
+X alternate with Y	Y make from X
+X cover Y	X cure with Y
+X involve Y	X use as Y
+X precipitate Y	Y secrete by X
+X penetrate Y	Y associate with X
+X join with Y	Y imply X
+X make from Y	Y improve X
+X develop Y	Y attribute to X
+X make by Y	Y correct X
+X substitute for Y	Y imply X
+X reserve for Y	Y differentiate from X
+X describe as Y	X kill Y
+Y introduce by X	Y penetrate X
+X convert by Y	Y form from X
+X cure with Y	Y compose of X
+X join with Y	Y relieve X
+X inactivate by Y	X present with Y
+X give as Y	Y correct with X
+X afford Y	Y reduce X
+X find Y	Y begin with X
+X cure with Y	X make Y
+X administer during Y	Y bring X
+X include Y	X penetrate by Y
+X treat with Y	Y include X
+Y involve X	Y reserve for X
+X provide by Y	X unite with Y
+X succeed to Y	Y contribute to X
+X develop with Y	Y suppress X
+X occur after Y	Y cure by X
+X describe as Y	Y carry X
+X transmit to Y	Y refer to X
+X manifest as Y	X use as Y
+X predispose to Y	X prescribe for Y
+Y require for X	Y use for X
+X synthesize from Y	Y decrease X
+X develop into Y	Y reserve for X
+X suggest Y	X use during Y
+X die of Y	X suppress Y
+X present Y	Y suggest X
+X administer for Y	Y die of X
+X be from Y	X occur Y
+X give Y	X make of Y
+X fertilize Y	X get into Y
+X decrease Y	X inhibit by Y
+Y compose of X	Y mimic X
+Y induce by X	Y occur after X
+X control Y	Y define as X
+X encounter Y	X order for Y
+X show Y	X transmit through Y
+Y be after X	Y treat X
+Y correct with X	Y transmit X
+X administer during Y	Y provide X
+Y isolate from X	Y receive X
+Y need for X	Y prescribe for X
+X use during Y	Y occur X
+X give as Y	Y suggest X
+X exacerbate Y	Y introduce X
+X penetrate by Y	Y develop with X
+X aggravate Y	X protect against Y
+X complicate by Y	Y convert X
+X metabolize to Y	X treat by Y
+X be in Y	X induce by Y
+Y introduce X	Y receive X
+Y accompany with X	Y respond to X
+X bring Y	Y occur with X
+X base on Y	X result from Y
+X use as Y	Y attribute to X
+X herald by Y	X hydrolyze Y
+X inactivate by Y	Y occur with X
+X dilate Y	Y inject into X
+Y derive from X	Y follow X
+X herald by Y	Y relieve X
+X give as Y	Y follow X
+X see in Y	Y inactivate X
+X appear in Y	X differ from Y
+X indicate in Y	Y compose of X
+X inhibit by Y	Y affect with X
+X combine with Y	Y introduce by X
+X ejaculate Y	Y infect with X
+Y produce X	Y treat with X
+X be for Y	Y terminate in X
+X convert to Y	Y take for X
+X make Y	X use as Y
+X be during Y	X fertilize by Y
+X give as Y	X help with Y
+Y bring X	Y make from X
+X succeed to Y	Y begin as X
+X complicate by Y	X spread Y
+Y accompany by X	Y see in X
+X attribute to Y	Y need for X
+X mask Y	Y occur after X
+X begin as Y	Y correct X
+X encounter Y	X succeed to Y
+X contract Y	X respond to Y
+X carry by Y	X substitute for Y
+X complicate with Y	X enter Y
+Y act as X	Y carry by X
+X follow Y	Y come from X
+X lead to Y	X take Y
+X act as Y	Y be after X
+X relieve with Y	Y begin as X
+Y relieve by X	Y terminate in X
+X constrict Y	Y inactivate by X
+X respond to Y	Y simulate X
+Y cure by X	Y mimic X
+X employ as Y	Y carry by X
+Y correct by X	Y penetrate X
+Y consist of X	Y lead to X
+X accompany Y	X see in Y
+X imply Y	Y lead to X
+X provide from Y	Y come with X
+X induce by Y	X transmit Y
+X differ from Y	Y convert to X
+X suppress Y	X turn to Y
+X introduce by Y	Y cure with X
+X indicate for Y	X lead to Y
+X wipe Y	Y resemble X
+X hydrolyze by Y	X obtain with Y
+X infect with Y	Y encounter X
+X transmit via Y	Y alternate with X
+X make of Y	Y convert X
+X constrict Y	X reserve for Y
+X dilate Y	Y make X
+X achieve with Y	X take Y
+X mask Y	Y succeed to X
+X start before Y	X treat with Y
+X develop for Y	X transmit by Y
+X be from Y	X differentiate from Y
+X replace Y	Y make from X
+X make Y	Y differentiate from X
+X come with Y	Y use as X
+X respond to Y	Y relieve with X
+X occur Y	Y correct with X
+Y accompany with X	Y fertilize by X
+X dilate Y	Y present as X
+X employ as Y	Y mimic X
+X confuse with Y	Y manage with X
+X find in Y	X give during Y
+X make from Y	X transmit to Y
+X make by Y	X mask Y
+X use with Y	Y manifest by X
+X compose of Y	X start with Y
+X lead to Y	Y fertilize X
+Y confound with X	Y use for X
+X fight Y	Y be against X
+X describe as Y	Y differentiate from X
+X eliminate Y	Y manifest by X
