@@ -37,7 +37,9 @@ Later duplicate or conflicting results for the same `subTaskId` are logged and i
 
 ## Remaining limitations
 
-Manager state remains in memory. If the Manager instance restarts during an active job, job state is not recovered.
+Manager state is now represented through `JobStateStore`, with `DynamoDbJobStateStore` for real runs and `InMemoryJobStateStore` for tests.
+
+The durable recovery path persists job and subtask state, recovers incomplete parsing, redispatches pending/stale subtasks, finalizes with a lease, and retries completion notifications.
 
 SQS DLQ/redrive configuration is not fully implemented in this branch.
 

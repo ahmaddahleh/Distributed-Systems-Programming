@@ -20,6 +20,11 @@ class RuntimeConfigTest {
         System.clearProperty(RuntimeConfig.PROP_KEY_PAIR);
         System.clearProperty(RuntimeConfig.PROP_IAM_PROFILE);
         System.clearProperty(RuntimeConfig.PROP_WORKER_LIMIT);
+        System.clearProperty(RuntimeConfig.PROP_DYNAMODB_TABLE);
+        System.clearProperty(RuntimeConfig.PROP_LEASE_DURATION_SECONDS);
+        System.clearProperty(RuntimeConfig.PROP_STALE_DISPATCH_SECONDS);
+        System.clearProperty(RuntimeConfig.PROP_RECOVERY_INTERVAL_SECONDS);
+        System.clearProperty(RuntimeConfig.PROP_MANAGER_ID);
     }
 
     @Test
@@ -30,6 +35,10 @@ class RuntimeConfigTest {
         assertEquals("vockey", RuntimeConfig.keyPairName());
         assertEquals("LabInstanceProfile", RuntimeConfig.iamInstanceProfile());
         assertEquals(7, RuntimeConfig.workerLimit());
+        assertEquals("DistributedTextAnalysisState", RuntimeConfig.dynamoDbTableName());
+        assertEquals(300, RuntimeConfig.leaseDurationSeconds());
+        assertEquals(300, RuntimeConfig.staleDispatchSeconds());
+        assertEquals(30, RuntimeConfig.recoveryIntervalSeconds());
     }
 
     @Test
@@ -40,6 +49,11 @@ class RuntimeConfigTest {
         System.setProperty(RuntimeConfig.PROP_KEY_PAIR, "key-test");
         System.setProperty(RuntimeConfig.PROP_IAM_PROFILE, "profile-test");
         System.setProperty(RuntimeConfig.PROP_WORKER_LIMIT, "3");
+        System.setProperty(RuntimeConfig.PROP_DYNAMODB_TABLE, "table-test");
+        System.setProperty(RuntimeConfig.PROP_LEASE_DURATION_SECONDS, "10");
+        System.setProperty(RuntimeConfig.PROP_STALE_DISPATCH_SECONDS, "11");
+        System.setProperty(RuntimeConfig.PROP_RECOVERY_INTERVAL_SECONDS, "12");
+        System.setProperty(RuntimeConfig.PROP_MANAGER_ID, "manager-test");
 
         assertEquals(Region.EU_WEST_1, RuntimeConfig.awsRegion());
         assertEquals("test-bucket", RuntimeConfig.bucketName());
@@ -47,6 +61,11 @@ class RuntimeConfigTest {
         assertEquals("key-test", RuntimeConfig.keyPairName());
         assertEquals("profile-test", RuntimeConfig.iamInstanceProfile());
         assertEquals(3, RuntimeConfig.workerLimit());
+        assertEquals("table-test", RuntimeConfig.dynamoDbTableName());
+        assertEquals(10, RuntimeConfig.leaseDurationSeconds());
+        assertEquals(11, RuntimeConfig.staleDispatchSeconds());
+        assertEquals(12, RuntimeConfig.recoveryIntervalSeconds());
+        assertEquals("manager-test", RuntimeConfig.managerId());
     }
 
     @Test
