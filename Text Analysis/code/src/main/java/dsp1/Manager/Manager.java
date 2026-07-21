@@ -243,33 +243,13 @@ public class Manager {
 
     /* ============================ INPUT PARSING ============================ */
 
-    private static List<JSONObject> buildWorkerTasksFromFile(String fileName, String taskId) {
+    static List<JSONObject> buildWorkerTasksFromFile(String fileName, String taskId) {
         List<JSONObject> tasks = new ArrayList<>();
 
         try {
-            String[] lines = Files.readString(Paths.get(fileName)).split("\\r?\\n|\\r");
-
-            for (String line : lines) {
-                if (line == null || line.trim().isEmpty()) {
-                    continue;
-                }
-
-                String[] parts = line.split("\\t");
-                if (parts.length < 2) {
-                    System.out.println("Skipping malformed line: " + line);
-                    continue;
-                }
-
-                String analysis = parts[0].trim();
-                String url = parts[1].trim();
-
-                JSONObject task = new JSONObject();
-                task.put("type", "workerTask");
-                task.put("taskId", taskId);
-                task.put("analysis", analysis);
-                task.put("url", url);
-
-                tasks.add(task);
+            List<WorkerTask> parsedTasks = InputTaskParser.parse(Files.readString(Paths.get(fileName)), taskId);
+            for (WorkerTask parsedTask : parsedTasks) {
+                tasks.add(parsedTask.toJson());
             }
 
         } catch (Exception e) {
@@ -341,16 +321,17 @@ public class Manager {
     private static void accumulateWorkerSuccess(Message msg) {
         JSONObject obj = new JSONObject(msg.body());
         String taskId = obj.getString("taskId");
+        String subTaskId = obj.optString("subTaskId", taskId);
         String resultLocation = obj.getString("result");
         String url = obj.getString("url");
         String analysis = obj.getString("analysis");
 
-        String[] record = { analysis, url, resultLocation };
+        String[] record = { subTaskId, analysis, url, resultLocation };
 
         List<String[]> resultsList = jobResults.get(taskId);
         boolean exists = false;
         for (String[] r : resultsList) {
-            if (r[0].equals(record[0]) && r[1].equals(record[1])) {
+            if (r[0].equals(record[0])) {
                 exists = true;
                 break;
             }
@@ -365,6 +346,7 @@ public class Manager {
     private static void accumulateWorkerFailure(Message msg) {
         JSONObject obj = new JSONObject(msg.body());
         String taskId = obj.getString("taskId");
+        String subTaskId = obj.optString("subTaskId", taskId);
         String error = obj.getString("error");
         String url = obj.getString("url");
         String analysis = obj.getString("analysis");
@@ -374,7 +356,7 @@ public class Manager {
                 + " | url=" + url
                 + " | error=" + error);
 
-        String[] record = { analysis, url, "ERROR: " + error };
+        String[] record = { subTaskId, analysis, url, "ERROR: " + error };
         jobResults.get(taskId).add(record);
 
         checkIfJobCompleted(taskId);
@@ -435,9 +417,10 @@ public class Manager {
         html.append("<tr><th>Analysis Type</th><th>Input File</th><th>Output / Error</th></tr>");
 
         for (String[] row : entries) {
-            String analysisType = row[0];
-            String inputUrl = row[1];
-            String outputField = row[2];
+            String offset = row.length == 4 ? row[0] : "";
+            String analysisType = row.length == 4 ? row[1] : row[0];
+            String inputUrl = row.length == 4 ? row[2] : row[1];
+            String outputField = row.length == 4 ? row[3] : row[2];
 
             html.append("<tr>");
             html.append("<td>").append(analysisType).append("</td>");

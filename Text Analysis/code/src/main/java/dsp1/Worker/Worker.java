@@ -26,6 +26,7 @@ public class Worker {
     private static String urlManagerToWorker;
 
     private static String activeTaskId;
+    private static String activeSubTaskId;
     private static String lastError = "";
 
     private static Message procMessage;
@@ -75,20 +76,21 @@ public class Worker {
 
         JSONObject payload = new JSONObject(msg.body());
         activeTaskId = payload.getString("taskId");
+        activeSubTaskId = payload.optString("subTaskId", activeTaskId);
         String sourceUrl = payload.getString("url");
         String analysisType = payload.getString("analysis");
 
         lastError = "";
 
         // 1) Download input file
-        File inputFile = downloadRemoteTextFile(sourceUrl, activeTaskId, "./");
+        File inputFile = downloadRemoteTextFile(sourceUrl, activeSubTaskId, "./");
         if (hasError()) {
             sendFailureToManager(sourceUrl, analysisType);
             return;
         }
 
         // 2) Analyze
-        File resultFile = runAnalysis(inputFile, analysisType, activeTaskId);
+        File resultFile = runAnalysis(inputFile, analysisType, activeSubTaskId);
         if (hasError() || resultFile == null) {
             sendFailureToManager(sourceUrl, analysisType);
             return;
@@ -97,8 +99,7 @@ public class Worker {
         // 3) Upload result to S3 and notify manager
         System.out.println("Analysis completed, uploading result to S3...");
     
-        String keyName = "results/" + activeTaskId + "_output.txt_" 
-        + sourceUrl.replace('/', '-') + "_" + analysisType;
+        String keyName = ResultKeyBuilder.build(activeTaskId, activeSubTaskId, sourceUrl, analysisType);
 
 
         uploadResultToS3(resultFile, keyName);
@@ -149,6 +150,7 @@ public class Worker {
     private static void sendFailureToManager(String url, String analysis) {
         JSONObject fail = new JSONObject()
                 .put("taskId", activeTaskId)
+                .put("subTaskId", activeSubTaskId)
                 .put("type", "failedjob")
                 .put("error", lastError)
                 .put("url", url)
@@ -160,6 +162,7 @@ public class Worker {
     private static void sendSuccessToManager(String url, String analysis, String s3Key) {
         JSONObject success = new JSONObject()
                 .put("taskId", activeTaskId)
+                .put("subTaskId", activeSubTaskId)
                 .put("type", "jobDone")
                 .put("result", s3Key)
                 .put("url", url)
@@ -189,7 +192,7 @@ public class Worker {
             String taskId,
             String destDir) {
         try {
-            String outPath = destDir + "/" + taskId + "_inputfile";
+            String outPath = destDir + "/" + ResultKeyBuilder.localInputFileName(taskId);
             InputStream in = new URL(url).openStream();
             Files.copy(in, Paths.get(outPath), StandardCopyOption.REPLACE_EXISTING);
 
@@ -211,7 +214,7 @@ public class Worker {
                                String taskId) {
 
     StanfordAnalyzer nlp = StanfordAnalyzer.getInstance();
-    File outputFile = new File("/tmp/" + taskId + "_output.txt");
+    File outputFile = new File("/tmp/" + ResultKeyBuilder.localOutputFileName(taskId));
 
     try {
         List<String> lines = Files.readAllLines(inputFile.toPath());
