@@ -1,6 +1,7 @@
 package dsp1.Manager;
 
 import dsp1.AWS;
+import dsp1.RuntimeConfig;
 import org.json.JSONObject;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.ec2.model.*;
@@ -37,6 +38,7 @@ public class Manager {
 
     // Per-job state remains in memory; restart recovery is still a known limitation.
     private static final ConcurrentHashMap<String, JobState> jobs = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<String, String> jobBuckets = new ConcurrentHashMap<>();
 
     // Termination flag (triggered when a job/args requests terminate)
     private static volatile boolean shutdownRequested = false;
@@ -102,14 +104,14 @@ public class Manager {
 
     /* ============================ S3 HELPERS ============================ */
 
-    private static String downloadFromS3ToLocal(String s3Key) {
+    private static String downloadFromS3ToLocal(String bucket, String s3Key) {
         String localName = "downloaded_" + s3Key.replace("/", "_");
 
         try {
             Files.deleteIfExists(Paths.get(localName));
 
             GetObjectRequest req = GetObjectRequest.builder()
-                    .bucket(aws.bucketName)
+                    .bucket(bucket)
                     .key(s3Key)
                     .build();
 
@@ -200,7 +202,7 @@ public class Manager {
     }
 
     private static int freeWorkerSlots() {
-        int maxWorkers = 7; // original limit logic preserved ---> after reading in aws rules
+        int maxWorkers = RuntimeConfig.workerLimit();
         int currentlyRunning = countRunningWorkers();
         return maxWorkers - currentlyRunning;
     }
@@ -298,7 +300,9 @@ public class Manager {
         System.out.println("  key    = " + key);
 
         // Download the input file
-        String localFile = downloadFromS3ToLocal(key);
+        jobBuckets.put(taskId, bucket);
+
+        String localFile = downloadFromS3ToLocal(bucket, key);
 
         // Parse into worker tasks
         List<WorkerTask> parsedTasks = buildWorkerTaskModelsFromFile(localFile, taskId);
@@ -397,18 +401,20 @@ public class Manager {
         List<String[]> results = state.summaryRows();
         String summaryKey = "results/" + taskId + "_summary.html";
 
-        createSummaryHtmlAndUpload(taskId, results, summaryKey);
+        String bucket = jobBuckets.getOrDefault(taskId, aws.bucketName);
+        createSummaryHtmlAndUpload(taskId, results, summaryKey, bucket);
 
         JSONObject doneMsg = new JSONObject();
         doneMsg.put("type", "jobDone");
         doneMsg.put("taskId", taskId);
-        doneMsg.put("s3Bucket", aws.bucketName);
+        doneMsg.put("s3Bucket", bucket);
         doneMsg.put("outputS3Key", summaryKey);
 
         sendToLocal(doneMsg.toString());
         System.out.println("Sent jobDone notification to LocalApplication for task " + taskId);
 
         jobs.remove(taskId);
+        jobBuckets.remove(taskId);
 
         jobsFinished.incrementAndGet();
     }
@@ -417,10 +423,11 @@ public class Manager {
 
     private static void createSummaryHtmlAndUpload(String taskId,
             List<String[]> entries,
-            String summaryKey) {
+            String summaryKey,
+            String bucket) {
 
-        String html = HtmlReportBuilder.build(taskId, aws.bucketName, entries);
-        uploadHtmlToS3(aws.bucketName, summaryKey, html);
+        String html = HtmlReportBuilder.build(taskId, bucket, entries);
+        uploadHtmlToS3(bucket, summaryKey, html);
         System.out.println("Summary file uploaded to S3 key: " + summaryKey);
     }
 
