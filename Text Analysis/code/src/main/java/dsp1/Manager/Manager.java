@@ -3,6 +3,8 @@ package dsp1.Manager;
 import dsp1.AWS;
 import dsp1.RuntimeConfig;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.ec2.model.*;
 import software.amazon.awssdk.services.s3.model.GetObjectRequest;
@@ -16,6 +18,7 @@ import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Manager {
+    private static final Logger logger = LoggerFactory.getLogger(Manager.class);
 
     /* ============================ CONFIG & STATE ============================ */
 
@@ -366,13 +369,14 @@ public class Manager {
     static boolean acceptWorkerResult(WorkerResultRecord record) {
         JobState state = jobs.get(record.taskId());
         if (state == null) {
-            System.out.println("Ignoring worker result for unknown job " + record.taskId());
+            logger.warn("component=Manager taskId={} subTaskId={} event=unknown_job_result",
+                    record.taskId(), record.subTaskId());
             return false;
         }
         boolean accepted = state.acceptTerminalResult(record);
         if (!accepted) {
-            System.out.println("Ignoring duplicate, conflicting, or unexpected worker result for taskId="
-                    + record.taskId() + ", subTaskId=" + record.subTaskId());
+            logger.info("component=Manager taskId={} subTaskId={} event=duplicate_or_conflicting_result_ignored",
+                    record.taskId(), record.subTaskId());
         }
         return accepted;
     }
@@ -388,7 +392,7 @@ public class Manager {
     private static void checkIfJobCompleted(String taskId) {
         JobState state = jobs.get(taskId);
         if (state == null) {
-            System.out.println("Ignoring completion check for unknown job " + taskId);
+            logger.warn("component=Manager taskId={} event=unknown_job_completion_check", taskId);
             return;
         }
 

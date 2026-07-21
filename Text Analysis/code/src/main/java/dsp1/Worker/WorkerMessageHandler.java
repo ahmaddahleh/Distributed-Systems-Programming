@@ -1,9 +1,12 @@
 package dsp1.Worker;
 
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import software.amazon.awssdk.services.sqs.model.Message;
 
 public final class WorkerMessageHandler {
+    private static final Logger logger = LoggerFactory.getLogger(WorkerMessageHandler.class);
 
     private WorkerMessageHandler() {
     }
@@ -32,8 +35,7 @@ public final class WorkerMessageHandler {
         try {
             request = parse(message);
         } catch (Exception e) {
-            System.err.println("Unable to parse worker task message: " + e.getMessage());
-            e.printStackTrace(System.err);
+            logger.warn("component=Worker event=task_parse_failed", e);
             return false;
         }
 
@@ -41,18 +43,24 @@ public final class WorkerMessageHandler {
         try {
             result = processor.process(request);
         } catch (Exception e) {
-            System.err.println("Unexpected error while processing task: " + e.getMessage());
-            e.printStackTrace(System.err);
+            logger.error("component=Worker taskId={} subTaskId={} event=task_processing_exception",
+                    request.taskId(), request.subTaskId(), e);
             result = WorkerTaskResult.failure(request, e.getMessage());
         }
 
         if (result.success()) {
+            logger.info("component=Worker taskId={} subTaskId={} event=report_success",
+                    request.taskId(), request.subTaskId());
             reporter.sendSuccess(result);
         } else {
+            logger.info("component=Worker taskId={} subTaskId={} event=report_failure",
+                    request.taskId(), request.subTaskId());
             reporter.sendFailure(result);
         }
 
         deleter.delete(message);
+        logger.info("component=Worker taskId={} subTaskId={} event=task_message_deleted",
+                request.taskId(), request.subTaskId());
         return true;
     }
 
