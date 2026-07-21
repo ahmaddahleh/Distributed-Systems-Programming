@@ -37,11 +37,8 @@ public class Manager {
     // AWS helper
     private static final AWS aws = AWS.getInstance();
 
-    // Per-job collected results: taskId -> list of [analysis, inputUrl,
-    // outputOrError]
-    private static final ConcurrentHashMap<String, List<String[]>> jobResults = new ConcurrentHashMap<>();
-    // Per-job expected number of sub-tasks
-    private static final ConcurrentHashMap<String, Integer> jobExpectedCounts = new ConcurrentHashMap<>();
+    // Per-job state remains in memory; restart recovery is still a known limitation.
+    private static final ConcurrentHashMap<String, JobState> jobs = new ConcurrentHashMap<>();
 
     // Termination flag (triggered when a job/args requests terminate)
     private static volatile boolean shutdownRequested = false;
@@ -247,7 +244,7 @@ public class Manager {
         List<JSONObject> tasks = new ArrayList<>();
 
         try {
-            List<WorkerTask> parsedTasks = InputTaskParser.parse(Files.readString(Paths.get(fileName)), taskId);
+            List<WorkerTask> parsedTasks = buildWorkerTaskModelsFromFile(fileName, taskId);
             for (WorkerTask parsedTask : parsedTasks) {
                 tasks.add(parsedTask.toJson());
             }
@@ -257,6 +254,15 @@ public class Manager {
         }
 
         return tasks;
+    }
+
+    static List<WorkerTask> buildWorkerTaskModelsFromFile(String fileName, String taskId) {
+        try {
+            return InputTaskParser.parse(Files.readString(Paths.get(fileName)), taskId);
+        } catch (Exception e) {
+            System.err.println("Error reading input file: " + e.getMessage());
+            return List.of();
+        }
     }
 
     /* ============================ JOB HANDLING ============================ */
@@ -293,23 +299,29 @@ public class Manager {
         System.out.println("  bucket = " + bucket);
         System.out.println("  key    = " + key);
 
-        // Prepare result list
-        jobResults.put(taskId, Collections.synchronizedList(new ArrayList<>()));
-
         // Download the input file
         String localFile = downloadFromS3ToLocal(key);
 
         // Parse into worker tasks
-        List<JSONObject> tasks = buildWorkerTasksFromFile(localFile, taskId);
-        jobExpectedCounts.put(taskId, tasks.size());
+        List<WorkerTask> parsedTasks = buildWorkerTaskModelsFromFile(localFile, taskId);
+        jobs.put(taskId, JobState.fromTasks(taskId, parsedTasks));
+        List<JSONObject> tasks = new ArrayList<>();
+        for (WorkerTask parsedTask : parsedTasks) {
+            tasks.add(parsedTask.toJson());
+        }
 
         System.out.println("Parsed " + tasks.size() + " items from input file.");
+
+        jobsSubmitted.incrementAndGet();
+
+        if (tasks.isEmpty()) {
+            checkIfJobCompleted(taskId);
+            return;
+        }
 
         // Adjust workers & dispatch tasks
         ensureEnoughWorkers(tasks, workersRatio);
         dispatchTasksToWorkers(tasks);
-
-        jobsSubmitted.incrementAndGet();
     }
 
     private static void handleTerminateFromLocal(Message msg) {
@@ -326,19 +338,7 @@ public class Manager {
         String url = obj.getString("url");
         String analysis = obj.getString("analysis");
 
-        String[] record = { subTaskId, analysis, url, resultLocation };
-
-        List<String[]> resultsList = jobResults.get(taskId);
-        boolean exists = false;
-        for (String[] r : resultsList) {
-            if (r[0].equals(record[0])) {
-                exists = true;
-                break;
-            }
-        }
-        if (!exists) {
-            resultsList.add(record);
-        }
+        acceptWorkerResult(new WorkerResultRecord(taskId, subTaskId, analysis, url, resultLocation, true));
 
         checkIfJobCompleted(taskId);
     }
@@ -356,23 +356,47 @@ public class Manager {
                 + " | url=" + url
                 + " | error=" + error);
 
-        String[] record = { subTaskId, analysis, url, "ERROR: " + error };
-        jobResults.get(taskId).add(record);
+        acceptWorkerResult(new WorkerResultRecord(taskId, subTaskId, analysis, url, "ERROR: " + error, false));
 
         checkIfJobCompleted(taskId);
     }
 
-    private static void checkIfJobCompleted(String taskId) {
-        int got = jobResults.get(taskId).size();
-        int expected = jobExpectedCounts.get(taskId);
+    static boolean acceptWorkerResult(WorkerResultRecord record) {
+        JobState state = jobs.get(record.taskId());
+        if (state == null) {
+            System.out.println("Ignoring worker result for unknown job " + record.taskId());
+            return false;
+        }
+        boolean accepted = state.acceptTerminalResult(record);
+        if (!accepted) {
+            System.out.println("Ignoring duplicate, conflicting, or unexpected worker result for taskId="
+                    + record.taskId() + ", subTaskId=" + record.subTaskId());
+        }
+        return accepted;
+    }
 
-        if (got != expected) {
+    static void clearJobsForTest() {
+        jobs.clear();
+    }
+
+    static void putJobForTest(JobState state) {
+        jobs.put(state.taskId(), state);
+    }
+
+    private static void checkIfJobCompleted(String taskId) {
+        JobState state = jobs.get(taskId);
+        if (state == null) {
+            System.out.println("Ignoring completion check for unknown job " + taskId);
+            return;
+        }
+
+        if (!state.isComplete() || !state.markFinalizing()) {
             return;
         }
 
         System.out.println("All sub-tasks for job " + taskId + " completed. Building summary...");
 
-        List<String[]> results = jobResults.get(taskId);
+        List<String[]> results = state.summaryRows();
         String summaryKey = "results/" + taskId + "_summary.html";
 
         createSummaryHtmlAndUpload(taskId, results, summaryKey);
@@ -386,8 +410,7 @@ public class Manager {
         sendToLocal(doneMsg.toString());
         System.out.println("Sent jobDone notification to LocalApplication for task " + taskId);
 
-        jobResults.remove(taskId);
-        jobExpectedCounts.remove(taskId);
+        jobs.remove(taskId);
 
         jobsFinished.incrementAndGet();
     }
