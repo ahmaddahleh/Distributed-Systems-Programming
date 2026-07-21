@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
-public final class InMemoryJobStateStore implements JobStateStore {
+public class InMemoryJobStateStore implements JobStateStore {
     private final Map<String, JobRecord> jobs = new ConcurrentHashMap<>();
     private final Map<String, Map<String, SubtaskRecord>> subtasks = new ConcurrentHashMap<>();
 
