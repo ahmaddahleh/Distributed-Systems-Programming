@@ -465,12 +465,15 @@ public class Manager {
             System.out.println("Message from Local: " + msg.body());
 
             if ("newTask".equals(type)) {
-                handleNewJobFromLocal(msg);
+                DurableLocalMessageHandler.persistThenAcknowledge(
+                        msg,
+                        ignored -> handleNewJobFromLocal(msg),
+                        message -> deleteMessage(urlLocalToManager, message));
+                return;
             } else if ("terminate".equals(type)) {
                 handleTerminateFromLocal(msg);
             }
 
-            // delete only after durable persistence/recovery accepted the message
             deleteMessage(urlLocalToManager, msg);
 
         } catch (Exception e) {
