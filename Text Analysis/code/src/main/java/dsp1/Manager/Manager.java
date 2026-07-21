@@ -8,8 +8,6 @@ import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.sqs.model.*;
 
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
@@ -421,60 +419,8 @@ public class Manager {
             List<String[]> entries,
             String summaryKey) {
 
-        StringBuilder html = new StringBuilder();
-
-        html.append("<html><head><title>Task ")
-                .append(taskId)
-                .append(" - Analysis Summary</title>")
-                .append("<style>")
-                .append("body{font-family:Arial,sans-serif;margin:25px;background:#f9f9f9;}")
-                .append("h1{color:#333;border-bottom:2px solid #007bff;padding-bottom:8px;}")
-                .append("table{width:100%;border-collapse:collapse;margin-top:20px;}")
-                .append("th,td{border:1px solid #ddd;padding:8px;text-align:left;}")
-                .append("th{background:#007bff;color:white;}")
-                .append(".error{background:#fdd;color:#900;font-weight:bold;}")
-                .append("</style></head><body>");
-
-        html.append("<h1>Results for Task: ").append(taskId).append("</h1>");
-        html.append("<table>");
-        html.append("<tr><th>Analysis Type</th><th>Input File</th><th>Output / Error</th></tr>");
-
-        for (String[] row : entries) {
-            String offset = row.length == 4 ? row[0] : "";
-            String analysisType = row.length == 4 ? row[1] : row[0];
-            String inputUrl = row.length == 4 ? row[2] : row[1];
-            String outputField = row.length == 4 ? row[3] : row[2];
-
-            html.append("<tr>");
-            html.append("<td>").append(analysisType).append("</td>");
-            html.append("<td><a href='")
-                    .append(inputUrl)
-                    .append("' target='_blank'>Source</a></td>");
-
-            try {
-                if (outputField != null && outputField.startsWith("ERROR:")) {
-                    html.append("<td class='error'>").append(outputField).append("</td>");
-                } else {
-                    String encodedKey = URLEncoder.encode(outputField, StandardCharsets.UTF_8.toString());
-                    String publicLink = "https://" + aws.bucketName
-                            + ".s3.us-east-1.amazonaws.com/" + encodedKey;
-
-                    html.append("<td><a href='")
-                            .append(publicLink)
-                            .append("' target='_blank'>View Output</a></td>");
-                }
-            } catch (Exception e) {
-                html.append("<td class='error'>UNEXPECTED ERROR: ")
-                        .append(e.getMessage())
-                        .append("</td>");
-            }
-
-            html.append("</tr>");
-        }
-
-        html.append("</table></body></html>");
-
-        uploadHtmlToS3(aws.bucketName, summaryKey, html.toString());
+        String html = HtmlReportBuilder.build(taskId, aws.bucketName, entries);
+        uploadHtmlToS3(aws.bucketName, summaryKey, html);
         System.out.println("Summary file uploaded to S3 key: " + summaryKey);
     }
 
