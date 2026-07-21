@@ -514,17 +514,20 @@ public class Manager {
 
     private static void handleIncomingWorker(Message msg) {
         System.out.println("Message from Worker: " + msg.body());
+        ManagerWorkerResultAcknowledger.handle(
+                msg,
+                Manager::processIncomingWorkerResult,
+                message -> deleteMessage(urlWorkersToManager, message));
+    }
+
+    private static void processIncomingWorkerResult(Message msg) {
         JSONObject obj = new JSONObject(msg.body());
         String type = obj.getString("type");
 
         // process based on type
         if ("jobDone".equals(type)) {
-            deleteMessage(urlWorkersToManager, msg);
-
             accumulateWorkerSuccess(msg);
         } else if ("failedjob".equals(type)) {
-            deleteMessage(urlWorkersToManager, msg);
-    
             accumulateWorkerFailure(msg);
         }
     }

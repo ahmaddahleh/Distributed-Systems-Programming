@@ -58,42 +58,48 @@ public class Worker {
             }
 
             procMessage = taskMsg;
-            removeMessage(QUEUE_MANAGER_TO_WORKER, taskMsg);
 
             System.out.println("Worker received SQS message: " + taskMsg.body());
 
-            try {
-                processTaskMessage(taskMsg);
-            } catch (Exception e) {
-                System.err.println("Unexpected error while processing task: " + e.getMessage());
-            }
+            WorkerMessageHandler.handle(
+                    taskMsg,
+                    Worker::processTaskRequest,
+                    new WorkerMessageHandler.TerminalReporter() {
+                        @Override
+                        public void sendSuccess(WorkerTaskResult result) {
+                            sendSuccessToManager(result);
+                        }
+
+                        @Override
+                        public void sendFailure(WorkerTaskResult result) {
+                            sendFailureToManager(result);
+                        }
+                    },
+                    new QueueMessageDeleter(urlManagerToWorker, Worker::removeMessage));
         }
     }
 
     /* ============================ TASK PROCESSING ============================ */
 
-    private static void processTaskMessage(Message msg) {
+    private static WorkerTaskResult processTaskRequest(WorkerTaskRequest request) {
 
-        JSONObject payload = new JSONObject(msg.body());
-        activeTaskId = payload.getString("taskId");
-        activeSubTaskId = payload.optString("subTaskId", activeTaskId);
-        String sourceUrl = payload.getString("url");
-        String analysisType = payload.getString("analysis");
+        activeTaskId = request.taskId();
+        activeSubTaskId = request.subTaskId();
+        String sourceUrl = request.sourceUrl();
+        String analysisType = request.analysisType();
 
         lastError = "";
 
         // 1) Download input file
         File inputFile = downloadRemoteTextFile(sourceUrl, activeSubTaskId, "./");
         if (hasError()) {
-            sendFailureToManager(sourceUrl, analysisType);
-            return;
+            return WorkerTaskResult.failure(request, lastError);
         }
 
         // 2) Analyze
         File resultFile = runAnalysis(inputFile, analysisType, activeSubTaskId);
         if (hasError() || resultFile == null) {
-            sendFailureToManager(sourceUrl, analysisType);
-            return;
+            return WorkerTaskResult.failure(request, lastError);
         }
 
         // 3) Upload result to S3 and notify manager
@@ -104,7 +110,7 @@ public class Worker {
 
         uploadResultToS3(resultFile, keyName);
 
-        sendSuccessToManager(sourceUrl, analysisType, keyName);
+        return WorkerTaskResult.success(request, keyName);
     }
 
     /* ============================ SQS HELPERS ============================ */
@@ -144,29 +150,30 @@ public class Worker {
         } catch (Exception e) {
             lastError = "Failed to send message to manager: " + e.getMessage();
             System.err.println(lastError);
+            throw new RuntimeException(lastError, e);
         }
     }
 
-    private static void sendFailureToManager(String url, String analysis) {
+    private static void sendFailureToManager(WorkerTaskResult result) {
         JSONObject fail = new JSONObject()
-                .put("taskId", activeTaskId)
-                .put("subTaskId", activeSubTaskId)
+                .put("taskId", result.request().taskId())
+                .put("subTaskId", result.request().subTaskId())
                 .put("type", "failedjob")
-                .put("error", lastError)
-                .put("url", url)
-                .put("analysis", analysis);
+                .put("error", result.error())
+                .put("url", result.request().sourceUrl())
+                .put("analysis", result.request().analysisType());
 
         sendToManager(fail.toString());
     }
 
-    private static void sendSuccessToManager(String url, String analysis, String s3Key) {
+    private static void sendSuccessToManager(WorkerTaskResult result) {
         JSONObject success = new JSONObject()
-                .put("taskId", activeTaskId)
-                .put("subTaskId", activeSubTaskId)
+                .put("taskId", result.request().taskId())
+                .put("subTaskId", result.request().subTaskId())
                 .put("type", "jobDone")
-                .put("result", s3Key)
-                .put("url", url)
-                .put("analysis", analysis);
+                .put("result", result.resultKey())
+                .put("url", result.request().sourceUrl())
+                .put("analysis", result.request().analysisType());
 
         sendToManager(success.toString());
     }
