@@ -34,6 +34,11 @@ Defaults preserve the assignment setup. Override with Java system properties or 
 | EC2 key pair | `dsp.aws.keyPair` | `DSP_AWS_KEY_PAIR` | `vockey` |
 | IAM profile | `dsp.aws.iamProfile` | `DSP_AWS_IAM_PROFILE` | `LabInstanceProfile` |
 | Worker limit | `dsp.worker.limit` | `DSP_WORKER_LIMIT` | `7` |
+| DynamoDB table | `dsp.dynamodb.table` | `DSP_DYNAMODB_TABLE` | `DistributedTextAnalysisState` |
+| Manager lease seconds | `dsp.manager.leaseSeconds` | `DSP_MANAGER_LEASE_SECONDS` | `300` |
+| Stale dispatch seconds | `dsp.manager.staleDispatchSeconds` | `DSP_MANAGER_STALE_DISPATCH_SECONDS` | `300` |
+| Recovery interval seconds | `dsp.manager.recoveryIntervalSeconds` | `DSP_MANAGER_RECOVERY_INTERVAL_SECONDS` | `30` |
+| Manager ID | `dsp.manager.id` | `DSP_MANAGER_ID` | generated |
 
 Use `.env.example` as a placeholder reference only. Do not commit real credentials.
 
@@ -59,8 +64,8 @@ The Manager treats `subTaskId` as the logical unit of completion. Duplicate or c
 
 ## Known Limitations
 
-Manager state remains in memory. A Manager restart during an active job still loses active job state.
+Manager state is persisted through the `JobStateStore` abstraction. Real runs use DynamoDB table `DistributedTextAnalysisState` by default; tests use an in-memory implementation.
 
-Full production recovery, durable job state, and SQS DLQ/redrive handling are not implemented in this focused branch.
+See `DURABLE_RECOVERY.md` for the DynamoDB schema, state transitions, leases, recovery behavior, and IAM notes.
 
-Real AWS integration was not tested locally.
+SQS DLQ/redrive handling is not fully automated, and real AWS integration was not tested locally.

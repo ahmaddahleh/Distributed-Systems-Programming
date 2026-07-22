@@ -30,11 +30,17 @@ The unit tests cover:
 - HTML escaping and safe URL rendering
 - runtime configuration defaults and overrides
 - exactly-once EC2 user-data encoding helper
+- durable Manager state transitions and recovery windows
+- local job request acknowledgement after durable persistence
+- stale dispatch redispatch
+- leased report finalization
+- completion notification retry
 
 ## Not covered locally
 
 The following require AWS or a future integration-test harness:
 
+- DynamoDB table existence and IAM permissions
 - IAM permissions
 - EC2 instance launch success
 - S3 object upload/download success

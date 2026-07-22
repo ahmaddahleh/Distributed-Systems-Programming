@@ -8,12 +8,14 @@ import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.*;
 import software.amazon.awssdk.services.sqs.SqsClient;
 import software.amazon.awssdk.services.sqs.model.CreateQueueRequest;
+import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
 
 public class AWS {
 
     private final S3Client s3;
     private final SqsClient sqs;
     private final Ec2Client ec2;
+    private final DynamoDbClient dynamoDb;
 
     public static String ami = RuntimeConfig.amiId();
 
@@ -27,6 +29,7 @@ public class AWS {
         s3 = S3Client.builder().region(reigon).build();
         sqs = SqsClient.builder().region(reigon).build();
         ec2 = Ec2Client.builder().region(reigon).build();
+        dynamoDb = DynamoDbClient.builder().region(reigon).build();
     }
 
     public SqsClient getSqs() {
@@ -36,6 +39,7 @@ public class AWS {
 
     public S3Client getS3() { return this.s3; }
     public Ec2Client getEc2() { return this.ec2; }
+    public DynamoDbClient getDynamoDb() { return this.dynamoDb; }
     
     public static AWS getInstance() {
     

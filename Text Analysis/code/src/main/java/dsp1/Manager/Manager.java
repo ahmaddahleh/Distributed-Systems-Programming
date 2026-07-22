@@ -2,15 +2,21 @@ package dsp1.Manager;
 
 import dsp1.AWS;
 import dsp1.RuntimeConfig;
+import dsp1.persistence.DynamoDbJobStateStore;
+import dsp1.persistence.JobStateStore;
+import dsp1.persistence.TerminalResultStatus;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import software.amazon.awssdk.core.sync.RequestBody;
+import software.amazon.awssdk.core.ResponseBytes;
 import software.amazon.awssdk.services.ec2.model.*;
 import software.amazon.awssdk.services.s3.model.GetObjectRequest;
+import software.amazon.awssdk.services.s3.model.GetObjectResponse;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.sqs.model.*;
 
+import java.time.Clock;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
@@ -42,6 +48,8 @@ public class Manager {
     // Per-job state remains in memory; restart recovery is still a known limitation.
     private static final ConcurrentHashMap<String, JobState> jobs = new ConcurrentHashMap<>();
     private static final ConcurrentHashMap<String, String> jobBuckets = new ConcurrentHashMap<>();
+    private static DurableManagerService durableService;
+    private static long lastRecoverySweepMillis = 0;
 
     // Termination flag (triggered when a job/args requests terminate)
     private static volatile boolean shutdownRequested = false;
@@ -136,6 +144,12 @@ public class Manager {
                 .build();
 
         aws.getS3().putObject(put, RequestBody.fromString(html));
+    }
+
+    private static String readS3ObjectAsString(String bucket, String key) {
+        ResponseBytes<GetObjectResponse> bytes = aws.getS3().getObjectAsBytes(
+                GetObjectRequest.builder().bucket(bucket).key(key).build());
+        return bytes.asUtf8String();
     }
 
     /*
@@ -288,45 +302,17 @@ public class Manager {
             return;
         }
 
-        String key = obj.getString("key");
-        int workersRatio = obj.getInt("workers");
-
         // terminate flag from the local app (boolean in JSON, read as string)
         String terminateFlag = obj.optString("terminate");
         if ("true".equals(terminateFlag)) {
             shutdownRequested = true;
         }
 
-        System.out.println("Received new job:");
-        System.out.println("  taskId = " + taskId);
-        System.out.println("  bucket = " + bucket);
-        System.out.println("  key    = " + key);
-
-        // Download the input file
-        jobBuckets.put(taskId, bucket);
-
-        String localFile = downloadFromS3ToLocal(bucket, key);
-
-        // Parse into worker tasks
-        List<WorkerTask> parsedTasks = buildWorkerTaskModelsFromFile(localFile, taskId);
-        jobs.put(taskId, JobState.fromTasks(taskId, parsedTasks));
-        List<JSONObject> tasks = new ArrayList<>();
-        for (WorkerTask parsedTask : parsedTasks) {
-            tasks.add(parsedTask.toJson());
-        }
-
-        System.out.println("Parsed " + tasks.size() + " items from input file.");
-
+        durableService.persistJobRequest(obj);
+        durableService.recoverJob(taskId);
         jobsSubmitted.incrementAndGet();
 
-        if (tasks.isEmpty()) {
-            checkIfJobCompleted(taskId);
-            return;
-        }
-
-        // Adjust workers & dispatch tasks
-        ensureEnoughWorkers(tasks, workersRatio);
-        dispatchTasksToWorkers(tasks);
+        logger.info("component=Manager taskId={} bucket={} event=durable_job_request_handled", taskId, bucket);
     }
 
     private static void handleTerminateFromLocal(Message msg) {
@@ -479,16 +465,19 @@ public class Manager {
             System.out.println("Message from Local: " + msg.body());
 
             if ("newTask".equals(type)) {
-                handleNewJobFromLocal(msg);
+                DurableLocalMessageHandler.persistThenAcknowledge(
+                        msg,
+                        ignored -> handleNewJobFromLocal(msg),
+                        message -> deleteMessage(urlLocalToManager, message));
+                return;
             } else if ("terminate".equals(type)) {
                 handleTerminateFromLocal(msg);
             }
 
-            // always delete after processing
             deleteMessage(urlLocalToManager, msg);
 
         } catch (Exception e) {
-            System.err.println("Error handling Local message: " + e.getMessage());
+            logger.error("component=Manager event=local_message_handling_failed", e);
         }
     }
 
@@ -503,6 +492,13 @@ public class Manager {
     private static void processIncomingWorkerResult(Message msg) {
         JSONObject obj = new JSONObject(msg.body());
         String type = obj.getString("type");
+        if ("jobDone".equals(type) || "failedjob".equals(type)) {
+            TerminalResultStatus status = durableService.handleWorkerResult(obj);
+            if (status == TerminalResultStatus.UNKNOWN_JOB_OR_SUBTASK) {
+                throw new IllegalStateException("Unknown durable job/subtask for worker result: " + msg.body());
+            }
+            return;
+        }
 
         // process based on type
         if ("jobDone".equals(type)) {
@@ -529,6 +525,9 @@ public class Manager {
         urlWorkersToManager = resolveQueueUrl(Q_WORKERS_TO_MANAGER);
         urlManagerToWorkers = resolveQueueUrl(Q_MANAGER_TO_WORKERS);
 
+        durableService = createDurableService();
+        durableService.recoverAll();
+
         System.out.println("Manager started. Listening for messages...");
 
         while (true) {
@@ -545,6 +544,12 @@ public class Manager {
                 executor.submit(() -> handleIncomingWorker(fromWorker));
             }
 
+            long nowMillis = System.currentTimeMillis();
+            if (nowMillis - lastRecoverySweepMillis >= DurableManagerConfig.fromRuntime().recoveryInterval().toMillis()) {
+                lastRecoverySweepMillis = nowMillis;
+                executor.submit(() -> durableService.recoverAll());
+            }
+
             // 3) If all jobs finished and terminate was requested -> tear down
             if (jobsSubmitted.get() == jobsFinished.get() && jobsSubmitted.get() > 0) {
                 System.out.println("All jobs processed.");
@@ -557,5 +562,37 @@ public class Manager {
                 }
             }
         }
+    }
+
+    private static DurableManagerService createDurableService() {
+        JobStateStore store = new DynamoDbJobStateStore(aws.getDynamoDb(), RuntimeConfig.dynamoDbTableName());
+        StorageGateway storage = new StorageGateway() {
+            @Override
+            public String readObjectAsString(String bucket, String key) {
+                return readS3ObjectAsString(bucket, key);
+            }
+
+            @Override
+            public void putHtml(String bucket, String key, String html) {
+                uploadHtmlToS3(bucket, key, html);
+            }
+        };
+        QueueGateway queues = new QueueGateway() {
+            @Override
+            public void sendWorkerTask(JSONObject task) {
+                sendToWorkers(task.toString());
+            }
+
+            @Override
+            public void sendLocalCompletion(JSONObject completion) {
+                sendToLocal(completion.toString());
+            }
+        };
+        return new DurableManagerService(
+                store,
+                storage,
+                queues,
+                Clock.systemUTC(),
+                DurableManagerConfig.fromRuntime());
     }
 }

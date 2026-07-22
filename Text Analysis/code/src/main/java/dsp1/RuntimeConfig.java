@@ -9,6 +9,11 @@ public final class RuntimeConfig {
     public static final String PROP_KEY_PAIR = "dsp.aws.keyPair";
     public static final String PROP_IAM_PROFILE = "dsp.aws.iamProfile";
     public static final String PROP_WORKER_LIMIT = "dsp.worker.limit";
+    public static final String PROP_DYNAMODB_TABLE = "dsp.dynamodb.table";
+    public static final String PROP_LEASE_DURATION_SECONDS = "dsp.manager.leaseSeconds";
+    public static final String PROP_STALE_DISPATCH_SECONDS = "dsp.manager.staleDispatchSeconds";
+    public static final String PROP_RECOVERY_INTERVAL_SECONDS = "dsp.manager.recoveryIntervalSeconds";
+    public static final String PROP_MANAGER_ID = "dsp.manager.id";
 
     private RuntimeConfig() {
     }
@@ -35,6 +40,26 @@ public final class RuntimeConfig {
 
     public static int workerLimit() {
         return Integer.parseInt(value(PROP_WORKER_LIMIT, "DSP_WORKER_LIMIT", "7"));
+    }
+
+    public static String dynamoDbTableName() {
+        return value(PROP_DYNAMODB_TABLE, "DSP_DYNAMODB_TABLE", "DistributedTextAnalysisState");
+    }
+
+    public static long leaseDurationSeconds() {
+        return Long.parseLong(value(PROP_LEASE_DURATION_SECONDS, "DSP_MANAGER_LEASE_SECONDS", "300"));
+    }
+
+    public static long staleDispatchSeconds() {
+        return Long.parseLong(value(PROP_STALE_DISPATCH_SECONDS, "DSP_MANAGER_STALE_DISPATCH_SECONDS", "300"));
+    }
+
+    public static long recoveryIntervalSeconds() {
+        return Long.parseLong(value(PROP_RECOVERY_INTERVAL_SECONDS, "DSP_MANAGER_RECOVERY_INTERVAL_SECONDS", "30"));
+    }
+
+    public static String managerId() {
+        return value(PROP_MANAGER_ID, "DSP_MANAGER_ID", "manager-" + java.util.UUID.randomUUID());
     }
 
     static String value(String propertyName, String envName, String defaultValue) {
