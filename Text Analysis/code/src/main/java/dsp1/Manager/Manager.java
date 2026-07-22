@@ -1,15 +1,16 @@
 package dsp1.Manager;
 
 import dsp1.AWS;
+import dsp1.RuntimeConfig;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.ec2.model.*;
 import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.sqs.model.*;
 
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
@@ -17,6 +18,7 @@ import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Manager {
+    private static final Logger logger = LoggerFactory.getLogger(Manager.class);
 
     /* ============================ CONFIG & STATE ============================ */
 
@@ -37,11 +39,9 @@ public class Manager {
     // AWS helper
     private static final AWS aws = AWS.getInstance();
 
-    // Per-job collected results: taskId -> list of [analysis, inputUrl,
-    // outputOrError]
-    private static final ConcurrentHashMap<String, List<String[]>> jobResults = new ConcurrentHashMap<>();
-    // Per-job expected number of sub-tasks
-    private static final ConcurrentHashMap<String, Integer> jobExpectedCounts = new ConcurrentHashMap<>();
+    // Per-job state remains in memory; restart recovery is still a known limitation.
+    private static final ConcurrentHashMap<String, JobState> jobs = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<String, String> jobBuckets = new ConcurrentHashMap<>();
 
     // Termination flag (triggered when a job/args requests terminate)
     private static volatile boolean shutdownRequested = false;
@@ -107,14 +107,14 @@ public class Manager {
 
     /* ============================ S3 HELPERS ============================ */
 
-    private static String downloadFromS3ToLocal(String s3Key) {
+    private static String downloadFromS3ToLocal(String bucket, String s3Key) {
         String localName = "downloaded_" + s3Key.replace("/", "_");
 
         try {
             Files.deleteIfExists(Paths.get(localName));
 
             GetObjectRequest req = GetObjectRequest.builder()
-                    .bucket(aws.bucketName)
+                    .bucket(bucket)
                     .key(s3Key)
                     .build();
 
@@ -205,7 +205,7 @@ public class Manager {
     }
 
     private static int freeWorkerSlots() {
-        int maxWorkers = 7; // original limit logic preserved ---> after reading in aws rules
+        int maxWorkers = RuntimeConfig.workerLimit();
         int currentlyRunning = countRunningWorkers();
         return maxWorkers - currentlyRunning;
     }
@@ -243,33 +243,13 @@ public class Manager {
 
     /* ============================ INPUT PARSING ============================ */
 
-    private static List<JSONObject> buildWorkerTasksFromFile(String fileName, String taskId) {
+    static List<JSONObject> buildWorkerTasksFromFile(String fileName, String taskId) {
         List<JSONObject> tasks = new ArrayList<>();
 
         try {
-            String[] lines = Files.readString(Paths.get(fileName)).split("\\r?\\n|\\r");
-
-            for (String line : lines) {
-                if (line == null || line.trim().isEmpty()) {
-                    continue;
-                }
-
-                String[] parts = line.split("\\t");
-                if (parts.length < 2) {
-                    System.out.println("Skipping malformed line: " + line);
-                    continue;
-                }
-
-                String analysis = parts[0].trim();
-                String url = parts[1].trim();
-
-                JSONObject task = new JSONObject();
-                task.put("type", "workerTask");
-                task.put("taskId", taskId);
-                task.put("analysis", analysis);
-                task.put("url", url);
-
-                tasks.add(task);
+            List<WorkerTask> parsedTasks = buildWorkerTaskModelsFromFile(fileName, taskId);
+            for (WorkerTask parsedTask : parsedTasks) {
+                tasks.add(parsedTask.toJson());
             }
 
         } catch (Exception e) {
@@ -277,6 +257,15 @@ public class Manager {
         }
 
         return tasks;
+    }
+
+    static List<WorkerTask> buildWorkerTaskModelsFromFile(String fileName, String taskId) {
+        try {
+            return InputTaskParser.parse(Files.readString(Paths.get(fileName)), taskId);
+        } catch (Exception e) {
+            System.err.println("Error reading input file: " + e.getMessage());
+            return List.of();
+        }
     }
 
     /* ============================ JOB HANDLING ============================ */
@@ -313,23 +302,31 @@ public class Manager {
         System.out.println("  bucket = " + bucket);
         System.out.println("  key    = " + key);
 
-        // Prepare result list
-        jobResults.put(taskId, Collections.synchronizedList(new ArrayList<>()));
-
         // Download the input file
-        String localFile = downloadFromS3ToLocal(key);
+        jobBuckets.put(taskId, bucket);
+
+        String localFile = downloadFromS3ToLocal(bucket, key);
 
         // Parse into worker tasks
-        List<JSONObject> tasks = buildWorkerTasksFromFile(localFile, taskId);
-        jobExpectedCounts.put(taskId, tasks.size());
+        List<WorkerTask> parsedTasks = buildWorkerTaskModelsFromFile(localFile, taskId);
+        jobs.put(taskId, JobState.fromTasks(taskId, parsedTasks));
+        List<JSONObject> tasks = new ArrayList<>();
+        for (WorkerTask parsedTask : parsedTasks) {
+            tasks.add(parsedTask.toJson());
+        }
 
         System.out.println("Parsed " + tasks.size() + " items from input file.");
+
+        jobsSubmitted.incrementAndGet();
+
+        if (tasks.isEmpty()) {
+            checkIfJobCompleted(taskId);
+            return;
+        }
 
         // Adjust workers & dispatch tasks
         ensureEnoughWorkers(tasks, workersRatio);
         dispatchTasksToWorkers(tasks);
-
-        jobsSubmitted.incrementAndGet();
     }
 
     private static void handleTerminateFromLocal(Message msg) {
@@ -341,23 +338,12 @@ public class Manager {
     private static void accumulateWorkerSuccess(Message msg) {
         JSONObject obj = new JSONObject(msg.body());
         String taskId = obj.getString("taskId");
+        String subTaskId = obj.optString("subTaskId", taskId);
         String resultLocation = obj.getString("result");
         String url = obj.getString("url");
         String analysis = obj.getString("analysis");
 
-        String[] record = { analysis, url, resultLocation };
-
-        List<String[]> resultsList = jobResults.get(taskId);
-        boolean exists = false;
-        for (String[] r : resultsList) {
-            if (r[0].equals(record[0]) && r[1].equals(record[1])) {
-                exists = true;
-                break;
-            }
-        }
-        if (!exists) {
-            resultsList.add(record);
-        }
+        acceptWorkerResult(new WorkerResultRecord(taskId, subTaskId, analysis, url, resultLocation, true));
 
         checkIfJobCompleted(taskId);
     }
@@ -365,6 +351,7 @@ public class Manager {
     private static void accumulateWorkerFailure(Message msg) {
         JSONObject obj = new JSONObject(msg.body());
         String taskId = obj.getString("taskId");
+        String subTaskId = obj.optString("subTaskId", taskId);
         String error = obj.getString("error");
         String url = obj.getString("url");
         String analysis = obj.getString("analysis");
@@ -374,38 +361,64 @@ public class Manager {
                 + " | url=" + url
                 + " | error=" + error);
 
-        String[] record = { analysis, url, "ERROR: " + error };
-        jobResults.get(taskId).add(record);
+        acceptWorkerResult(new WorkerResultRecord(taskId, subTaskId, analysis, url, "ERROR: " + error, false));
 
         checkIfJobCompleted(taskId);
     }
 
-    private static void checkIfJobCompleted(String taskId) {
-        int got = jobResults.get(taskId).size();
-        int expected = jobExpectedCounts.get(taskId);
+    static boolean acceptWorkerResult(WorkerResultRecord record) {
+        JobState state = jobs.get(record.taskId());
+        if (state == null) {
+            logger.warn("component=Manager taskId={} subTaskId={} event=unknown_job_result",
+                    record.taskId(), record.subTaskId());
+            return false;
+        }
+        boolean accepted = state.acceptTerminalResult(record);
+        if (!accepted) {
+            logger.info("component=Manager taskId={} subTaskId={} event=duplicate_or_conflicting_result_ignored",
+                    record.taskId(), record.subTaskId());
+        }
+        return accepted;
+    }
 
-        if (got != expected) {
+    static void clearJobsForTest() {
+        jobs.clear();
+    }
+
+    static void putJobForTest(JobState state) {
+        jobs.put(state.taskId(), state);
+    }
+
+    private static void checkIfJobCompleted(String taskId) {
+        JobState state = jobs.get(taskId);
+        if (state == null) {
+            logger.warn("component=Manager taskId={} event=unknown_job_completion_check", taskId);
+            return;
+        }
+
+        if (!state.isComplete() || !state.markFinalizing()) {
             return;
         }
 
         System.out.println("All sub-tasks for job " + taskId + " completed. Building summary...");
 
-        List<String[]> results = jobResults.get(taskId);
+        List<String[]> results = state.summaryRows();
         String summaryKey = "results/" + taskId + "_summary.html";
 
-        createSummaryHtmlAndUpload(taskId, results, summaryKey);
+        String bucket = jobBuckets.getOrDefault(taskId, aws.bucketName);
+        createSummaryHtmlAndUpload(taskId, results, summaryKey, bucket);
 
         JSONObject doneMsg = new JSONObject();
         doneMsg.put("type", "jobDone");
         doneMsg.put("taskId", taskId);
-        doneMsg.put("s3Bucket", aws.bucketName);
+        doneMsg.put("s3Bucket", bucket);
         doneMsg.put("outputS3Key", summaryKey);
 
         sendToLocal(doneMsg.toString());
         System.out.println("Sent jobDone notification to LocalApplication for task " + taskId);
 
-        jobResults.remove(taskId);
-        jobExpectedCounts.remove(taskId);
+        jobs.remove(taskId);
+        jobBuckets.remove(taskId);
 
         jobsFinished.incrementAndGet();
     }
@@ -414,61 +427,11 @@ public class Manager {
 
     private static void createSummaryHtmlAndUpload(String taskId,
             List<String[]> entries,
-            String summaryKey) {
+            String summaryKey,
+            String bucket) {
 
-        StringBuilder html = new StringBuilder();
-
-        html.append("<html><head><title>Task ")
-                .append(taskId)
-                .append(" - Analysis Summary</title>")
-                .append("<style>")
-                .append("body{font-family:Arial,sans-serif;margin:25px;background:#f9f9f9;}")
-                .append("h1{color:#333;border-bottom:2px solid #007bff;padding-bottom:8px;}")
-                .append("table{width:100%;border-collapse:collapse;margin-top:20px;}")
-                .append("th,td{border:1px solid #ddd;padding:8px;text-align:left;}")
-                .append("th{background:#007bff;color:white;}")
-                .append(".error{background:#fdd;color:#900;font-weight:bold;}")
-                .append("</style></head><body>");
-
-        html.append("<h1>Results for Task: ").append(taskId).append("</h1>");
-        html.append("<table>");
-        html.append("<tr><th>Analysis Type</th><th>Input File</th><th>Output / Error</th></tr>");
-
-        for (String[] row : entries) {
-            String analysisType = row[0];
-            String inputUrl = row[1];
-            String outputField = row[2];
-
-            html.append("<tr>");
-            html.append("<td>").append(analysisType).append("</td>");
-            html.append("<td><a href='")
-                    .append(inputUrl)
-                    .append("' target='_blank'>Source</a></td>");
-
-            try {
-                if (outputField != null && outputField.startsWith("ERROR:")) {
-                    html.append("<td class='error'>").append(outputField).append("</td>");
-                } else {
-                    String encodedKey = URLEncoder.encode(outputField, StandardCharsets.UTF_8.toString());
-                    String publicLink = "https://" + aws.bucketName
-                            + ".s3.us-east-1.amazonaws.com/" + encodedKey;
-
-                    html.append("<td><a href='")
-                            .append(publicLink)
-                            .append("' target='_blank'>View Output</a></td>");
-                }
-            } catch (Exception e) {
-                html.append("<td class='error'>UNEXPECTED ERROR: ")
-                        .append(e.getMessage())
-                        .append("</td>");
-            }
-
-            html.append("</tr>");
-        }
-
-        html.append("</table></body></html>");
-
-        uploadHtmlToS3(aws.bucketName, summaryKey, html.toString());
+        String html = HtmlReportBuilder.build(taskId, bucket, entries);
+        uploadHtmlToS3(bucket, summaryKey, html);
         System.out.println("Summary file uploaded to S3 key: " + summaryKey);
     }
 
@@ -531,17 +494,20 @@ public class Manager {
 
     private static void handleIncomingWorker(Message msg) {
         System.out.println("Message from Worker: " + msg.body());
+        ManagerWorkerResultAcknowledger.handle(
+                msg,
+                Manager::processIncomingWorkerResult,
+                message -> deleteMessage(urlWorkersToManager, message));
+    }
+
+    private static void processIncomingWorkerResult(Message msg) {
         JSONObject obj = new JSONObject(msg.body());
         String type = obj.getString("type");
 
         // process based on type
         if ("jobDone".equals(type)) {
-            deleteMessage(urlWorkersToManager, msg);
-
             accumulateWorkerSuccess(msg);
         } else if ("failedjob".equals(type)) {
-            deleteMessage(urlWorkersToManager, msg);
-    
             accumulateWorkerFailure(msg);
         }
     }

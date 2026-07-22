@@ -1,6 +1,7 @@
 package dsp1.LocalApplication;
 
 import dsp1.AWS;
+import dsp1.RuntimeConfig;
 import org.json.JSONObject;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.regions.Region;
@@ -29,7 +30,7 @@ public class LocalApplication {
     /* ------------------------------ AWS Clients ------------------------------ */
 
     private static final AWS aws = AWS.getInstance();
-    private static final Region activeRegion = Region.US_EAST_1;
+    private static final Region activeRegion = RuntimeConfig.awsRegion();
 
     private static final Ec2Client ec2 = Ec2Client.builder().region(activeRegion).build();
     private static final S3Client s3 = S3Client.builder().region(activeRegion).build();
@@ -42,7 +43,7 @@ public class LocalApplication {
     private static final String ROLE_KEY = "Role";
     private static final String ROLE_MANAGER = "Manager";
 
-    private static final String BUCKET = "dsp-ahmad-dah";
+    private static final String BUCKET = RuntimeConfig.bucketName();
 
     private static final String QUEUE_MANAGER_TO_LOCAL = "ManagerToLocalQueue";
     private static final String QUEUE_LOCAL_TO_MANAGER = "LocalToManagerQueue";
@@ -156,8 +157,7 @@ public class LocalApplication {
                 nohup java -jar /home/ec2-user/app/system.jar > /home/ec2-user/app/log.txt 2>&1 &
                 """.formatted(BUCKET);
 
-        String encoded = Base64.getEncoder().encodeToString(userData.getBytes());
-        String newManagerId = aws.createEC2(encoded, "Manager", 1);
+        String newManagerId = aws.createEC2(userData, "Manager", 1);
 
         System.out.println("New Manager launched ID=" + newManagerId);
         return newManagerId;
@@ -277,7 +277,7 @@ public class LocalApplication {
             }
 
             String summaryKey = json.getString("outputS3Key");
-            fetchFromS3(BUCKET, summaryKey, outputName);
+            fetchFromS3(json.optString("s3Bucket", BUCKET), summaryKey, outputName);
 
             System.out.println("Summary saved → " + new File(outputName).getAbsolutePath());
 

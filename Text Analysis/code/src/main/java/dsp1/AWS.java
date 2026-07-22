@@ -9,19 +9,17 @@ import software.amazon.awssdk.services.s3.model.*;
 import software.amazon.awssdk.services.sqs.SqsClient;
 import software.amazon.awssdk.services.sqs.model.CreateQueueRequest;
 
-import java.util.Base64;
-
 public class AWS {
 
     private final S3Client s3;
     private final SqsClient sqs;
     private final Ec2Client ec2;
 
-    public static String ami = "ami-00e95a9222311e8ed";
+    public static String ami = RuntimeConfig.amiId();
 
-    public static Region reigon = Region.US_EAST_1;
+    public static Region reigon = RuntimeConfig.awsRegion();
 
-    public String bucketName = "dsp-ahmad-dah";
+    public String bucketName = RuntimeConfig.bucketName();
 
     private static final AWS instance = new AWS();
 
@@ -49,14 +47,7 @@ public class AWS {
     // S3
     public void createBucketIfNotExists(String bucketName) {
         try {
-            s3.createBucket(CreateBucketRequest
-                    .builder()
-                    .bucket(bucketName)
-                    .createBucketConfiguration(
-                            CreateBucketConfiguration.builder()
-                                    .locationConstraint(bucketName)
-                                    .build())
-                    .build());
+            s3.createBucket(createBucketRequest(bucketName));
             s3.waiter().waitUntilBucketExists(
                     HeadBucketRequest.builder()
                             .bucket(bucketName)
@@ -67,16 +58,28 @@ public class AWS {
         }
     }
 
+    static CreateBucketRequest createBucketRequest(String bucketName) {
+        CreateBucketRequest.Builder builder = CreateBucketRequest.builder().bucket(bucketName);
+        String regionId = RuntimeConfig.awsRegion().id();
+        if (!Region.US_EAST_1.id().equals(regionId)) {
+            builder.createBucketConfiguration(
+                    CreateBucketConfiguration.builder()
+                            .locationConstraint(BucketLocationConstraint.fromValue(regionId))
+                            .build());
+        }
+        return builder.build();
+    }
+
     // EC2
     public String createEC2(String script, String tagName, int numberOfInstances) {
         RunInstancesRequest runRequest = RunInstancesRequest.builder()
                 .instanceType(InstanceType.T2_MEDIUM)
-                .imageId("ami-0c02fb55956c7d316") 
+                .imageId(RuntimeConfig.amiId())
                 .maxCount(numberOfInstances)
                 .minCount(1)
-                .keyName("vockey")
-                .iamInstanceProfile(IamInstanceProfileSpecification.builder().name("LabInstanceProfile").build())
-                .userData(Base64.getEncoder().encodeToString(script.getBytes()))
+                .keyName(RuntimeConfig.keyPairName())
+                .iamInstanceProfile(IamInstanceProfileSpecification.builder().name(RuntimeConfig.iamInstanceProfile()).build())
+                .userData(UserDataEncoder.encode(script))
                 .build();
 
         RunInstancesResponse response = ec2.runInstances(runRequest);

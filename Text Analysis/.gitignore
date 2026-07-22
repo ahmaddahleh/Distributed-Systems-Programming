@@ -1,0 +1,35 @@
+target/
+**/target/
+dependency-reduced-pom.xml
+
+# IDE metadata
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+.classpath
+.project
+.settings/
+
+# Local environment and credentials
+.env
+.env.*
+!.env.example
+.aws/
+credentials
+config
+*.pem
+*.ppk
+*.key
+id_rsa*
+id_ed25519*
+
+# Generated outputs and temporary files
+output.html
+downloaded_*
+*_inputfile
+*_output.txt
+*.log
+tmp/
+temp/
