@@ -102,6 +102,85 @@ class InMemoryJobStateStoreTest {
     }
 
     @Test
+    void concurrentWorkersCanClaimSubtaskOnlyOnce() throws Exception {
+        InMemoryJobStateStore store = runningStoreWithOneSubtask();
+        CountDownLatch start = new CountDownLatch(1);
+        AtomicInteger claimed = new AtomicInteger();
+        ExecutorService executor = Executors.newFixedThreadPool(8);
+
+        for (int i = 0; i < 16; i++) {
+            String workerId = "worker-" + i;
+            executor.submit(() -> {
+                try {
+                    start.await();
+                    if (store.claimSubtaskForProcessing("job-1", "job-1:0", workerId, now, Duration.ofMinutes(2))
+                            == SubtaskClaimStatus.CLAIMED) {
+                        claimed.incrementAndGet();
+                    }
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+            });
+        }
+
+        start.countDown();
+        executor.shutdown();
+        assertTrue(executor.awaitTermination(5, TimeUnit.SECONDS));
+        assertEquals(1, claimed.get());
+        assertEquals(SubtaskStatus.PROCESSING, store.listSubtasks("job-1").get(0).status());
+    }
+
+    @Test
+    void expiredProcessingLeaseCanBeClaimedByAnotherWorker() {
+        InMemoryJobStateStore store = runningStoreWithOneSubtask();
+
+        assertEquals(SubtaskClaimStatus.CLAIMED,
+                store.claimSubtaskForProcessing("job-1", "job-1:0", "worker-a", now, Duration.ofSeconds(30)));
+        assertEquals(SubtaskClaimStatus.OWNED_BY_ANOTHER_WORKER,
+                store.claimSubtaskForProcessing("job-1", "job-1:0", "worker-b", now.plusSeconds(10), Duration.ofSeconds(30)));
+        assertEquals(SubtaskClaimStatus.CLAIMED,
+                store.claimSubtaskForProcessing("job-1", "job-1:0", "worker-b", now.plusSeconds(31), Duration.ofSeconds(30)));
+
+        SubtaskRecord subtask = store.listSubtasks("job-1").get(0);
+        assertEquals("worker-b", subtask.processingOwner());
+        assertEquals(2, subtask.attemptCount());
+    }
+
+    @Test
+    void activeOwnerCanRenewButNonOwnerCannot() {
+        InMemoryJobStateStore store = runningStoreWithOneSubtask();
+        store.claimSubtaskForProcessing("job-1", "job-1:0", "worker-a", now, Duration.ofSeconds(30));
+
+        assertEquals(ProcessingLeaseRenewalStatus.RENEWED,
+                store.renewProcessingLease("job-1", "job-1:0", "worker-a", now.plusSeconds(10), Duration.ofSeconds(30)));
+        assertEquals(ProcessingLeaseRenewalStatus.LOST_OWNERSHIP,
+                store.renewProcessingLease("job-1", "job-1:0", "worker-b", now.plusSeconds(11), Duration.ofSeconds(30)));
+    }
+
+    @Test
+    void terminalSubtaskCannotBeClaimed() {
+        InMemoryJobStateStore store = runningStoreWithOneSubtask();
+        store.acceptTerminalResult(success("job-1", "job-1:0", "result"), now);
+
+        assertEquals(SubtaskClaimStatus.ALREADY_TERMINAL,
+                store.claimSubtaskForProcessing("job-1", "job-1:0", "worker-a", now, Duration.ofMinutes(2)));
+    }
+
+    @Test
+    void onlyCurrentProcessingOwnerCanCompleteSubtask() {
+        InMemoryJobStateStore store = runningStoreWithOneSubtask();
+        store.claimSubtaskForProcessing("job-1", "job-1:0", "worker-a", now, Duration.ofSeconds(30));
+        store.claimSubtaskForProcessing("job-1", "job-1:0", "worker-b", now.plusSeconds(31), Duration.ofSeconds(30));
+
+        assertEquals(ClaimedSubtaskCompletionStatus.STALE_OWNER,
+                store.completeClaimedSubtask(success("job-1", "job-1:0", "late"), "worker-a", now.plusSeconds(32)));
+        assertEquals(ClaimedSubtaskCompletionStatus.COMPLETED,
+                store.completeClaimedSubtask(success("job-1", "job-1:0", "winner"), "worker-b", now.plusSeconds(33)));
+        assertEquals(1, store.loadJob("job-1").orElseThrow().completedSubtaskCount());
+        assertEquals("winner", store.listSubtasks("job-1").get(0).resultS3Key());
+    }
+
+    @Test
     void finalizationLeaseAllowsOneOwnerAndExpiredTakeover() {
         InMemoryJobStateStore store = runningStoreWithOneSubtask();
         store.acceptTerminalResult(success("job-1", "job-1:0", "result"), now);

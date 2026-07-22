@@ -25,6 +25,11 @@ class RuntimeConfigTest {
         System.clearProperty(RuntimeConfig.PROP_STALE_DISPATCH_SECONDS);
         System.clearProperty(RuntimeConfig.PROP_RECOVERY_INTERVAL_SECONDS);
         System.clearProperty(RuntimeConfig.PROP_MANAGER_ID);
+        System.clearProperty(RuntimeConfig.PROP_WORKER_ID);
+        System.clearProperty(RuntimeConfig.PROP_WORKER_PROCESSING_LEASE_SECONDS);
+        System.clearProperty(RuntimeConfig.PROP_WORKER_LEASE_HEARTBEAT_SECONDS);
+        System.clearProperty(RuntimeConfig.PROP_WORKER_DUPLICATE_VISIBILITY_DELAY_SECONDS);
+        System.clearProperty(RuntimeConfig.PROP_WORKER_SQS_VISIBILITY_EXTENSION_SECONDS);
     }
 
     @Test
@@ -39,6 +44,10 @@ class RuntimeConfigTest {
         assertEquals(300, RuntimeConfig.leaseDurationSeconds());
         assertEquals(300, RuntimeConfig.staleDispatchSeconds());
         assertEquals(30, RuntimeConfig.recoveryIntervalSeconds());
+        assertEquals(120, RuntimeConfig.workerProcessingLeaseSeconds());
+        assertEquals(30, RuntimeConfig.workerLeaseHeartbeatSeconds());
+        assertEquals(30, RuntimeConfig.workerDuplicateVisibilityDelaySeconds());
+        assertEquals(120, RuntimeConfig.workerSqsVisibilityExtensionSeconds());
     }
 
     @Test
@@ -54,6 +63,11 @@ class RuntimeConfigTest {
         System.setProperty(RuntimeConfig.PROP_STALE_DISPATCH_SECONDS, "11");
         System.setProperty(RuntimeConfig.PROP_RECOVERY_INTERVAL_SECONDS, "12");
         System.setProperty(RuntimeConfig.PROP_MANAGER_ID, "manager-test");
+        System.setProperty(RuntimeConfig.PROP_WORKER_ID, "worker-test");
+        System.setProperty(RuntimeConfig.PROP_WORKER_PROCESSING_LEASE_SECONDS, "40");
+        System.setProperty(RuntimeConfig.PROP_WORKER_LEASE_HEARTBEAT_SECONDS, "10");
+        System.setProperty(RuntimeConfig.PROP_WORKER_DUPLICATE_VISIBILITY_DELAY_SECONDS, "13");
+        System.setProperty(RuntimeConfig.PROP_WORKER_SQS_VISIBILITY_EXTENSION_SECONDS, "41");
 
         assertEquals(Region.EU_WEST_1, RuntimeConfig.awsRegion());
         assertEquals("test-bucket", RuntimeConfig.bucketName());
@@ -66,6 +80,20 @@ class RuntimeConfigTest {
         assertEquals(11, RuntimeConfig.staleDispatchSeconds());
         assertEquals(12, RuntimeConfig.recoveryIntervalSeconds());
         assertEquals("manager-test", RuntimeConfig.managerId());
+        assertEquals("worker-test", RuntimeConfig.workerId());
+        assertEquals(40, RuntimeConfig.workerProcessingLeaseSeconds());
+        assertEquals(10, RuntimeConfig.workerLeaseHeartbeatSeconds());
+        assertEquals(13, RuntimeConfig.workerDuplicateVisibilityDelaySeconds());
+        assertEquals(41, RuntimeConfig.workerSqsVisibilityExtensionSeconds());
+    }
+
+    @Test
+    void workerLeaseDurationMustExceedHeartbeatInterval() {
+        System.setProperty(RuntimeConfig.PROP_WORKER_PROCESSING_LEASE_SECONDS, "10");
+        System.setProperty(RuntimeConfig.PROP_WORKER_LEASE_HEARTBEAT_SECONDS, "10");
+
+        org.junit.jupiter.api.Assertions.assertThrows(IllegalArgumentException.class,
+                RuntimeConfig::workerProcessingLeaseSeconds);
     }
 
     @Test

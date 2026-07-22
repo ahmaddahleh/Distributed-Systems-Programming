@@ -1,5 +1,8 @@
 package dsp1.Worker;
 
+import dsp1.persistence.ClaimedSubtaskCompletionStatus;
+import dsp1.persistence.ProcessingLeaseRenewalStatus;
+import dsp1.persistence.SubtaskClaimStatus;
 import org.junit.jupiter.api.Test;
 import software.amazon.awssdk.services.sqs.model.Message;
 
@@ -107,6 +110,113 @@ class WorkerMessageHandlerTest {
         org.junit.jupiter.api.Assertions.assertEquals(List.of(), events);
     }
 
+    @Test
+    void duplicateMessageOwnedByAnotherWorkerDoesNotProcessOrDelete() {
+        Message message = taskMessage();
+        List<String> events = new ArrayList<>();
+
+        boolean handled = WorkerMessageHandler.handleWithLease(
+                message,
+                request -> {
+                    events.add("process");
+                    return WorkerTaskResult.success(request, "unused");
+                },
+                new RecordingReporter(events),
+                msg -> events.add("delete"),
+                msg -> events.add("delay:" + msg.receiptHandle()),
+                new FakeLeaseCoordinator(SubtaskClaimStatus.OWNED_BY_ANOTHER_WORKER),
+                (request, coordinator) -> new RecordingHeartbeat(events));
+
+        assertFalse(handled);
+        org.junit.jupiter.api.Assertions.assertEquals(List.of("delay:receipt-1"), events);
+    }
+
+    @Test
+    void temporaryLeaseFailureDoesNotStartProcessingOrDelete() {
+        Message message = taskMessage();
+        List<String> events = new ArrayList<>();
+
+        boolean handled = WorkerMessageHandler.handleWithLease(
+                message,
+                request -> {
+                    events.add("process");
+                    return WorkerTaskResult.success(request, "unused");
+                },
+                new RecordingReporter(events),
+                msg -> events.add("delete"),
+                msg -> events.add("delay"),
+                new ThrowingClaimCoordinator(),
+                (request, coordinator) -> new RecordingHeartbeat(events));
+
+        assertFalse(handled);
+        org.junit.jupiter.api.Assertions.assertEquals(List.of(), events);
+    }
+
+    @Test
+    void terminalDuplicateMessageDeletesWithoutProcessing() {
+        Message message = taskMessage();
+        List<String> events = new ArrayList<>();
+
+        boolean handled = WorkerMessageHandler.handleWithLease(
+                message,
+                request -> {
+                    events.add("process");
+                    return WorkerTaskResult.success(request, "unused");
+                },
+                new RecordingReporter(events),
+                msg -> events.add("delete:" + msg.receiptHandle()),
+                msg -> events.add("delay"),
+                new FakeLeaseCoordinator(SubtaskClaimStatus.ALREADY_TERMINAL),
+                (request, coordinator) -> new RecordingHeartbeat(events));
+
+        assertTrue(handled);
+        org.junit.jupiter.api.Assertions.assertEquals(List.of("delete:receipt-1"), events);
+    }
+
+    @Test
+    void staleOwnerCompletionDoesNotNotifyOrDelete() {
+        Message message = taskMessage();
+        List<String> events = new ArrayList<>();
+        FakeLeaseCoordinator coordinator = new FakeLeaseCoordinator(SubtaskClaimStatus.CLAIMED);
+        coordinator.completionStatus = ClaimedSubtaskCompletionStatus.STALE_OWNER;
+
+        boolean handled = WorkerMessageHandler.handleWithLease(
+                message,
+                request -> {
+                    events.add("process:" + request.subTaskId());
+                    return WorkerTaskResult.success(request, "results/job-1/job-1_0.txt");
+                },
+                new RecordingReporter(events),
+                msg -> events.add("delete"),
+                msg -> events.add("delay"),
+                coordinator,
+                (request, ignored) -> new RecordingHeartbeat(events));
+
+        assertFalse(handled);
+        org.junit.jupiter.api.Assertions.assertEquals(List.of("process:job-1:0", "heartbeat-closed"), events);
+    }
+
+    @Test
+    void heartbeatOwnershipLossDoesNotNotifyOrDelete() {
+        Message message = taskMessage();
+        List<String> events = new ArrayList<>();
+
+        boolean handled = WorkerMessageHandler.handleWithLease(
+                message,
+                request -> {
+                    events.add("process:" + request.subTaskId());
+                    return WorkerTaskResult.success(request, "results/job-1/job-1_0.txt");
+                },
+                new RecordingReporter(events),
+                msg -> events.add("delete"),
+                msg -> events.add("delay"),
+                new FakeLeaseCoordinator(SubtaskClaimStatus.CLAIMED),
+                (request, ignored) -> new RecordingHeartbeat(events, true));
+
+        assertFalse(handled);
+        org.junit.jupiter.api.Assertions.assertEquals(List.of("process:job-1:0", "heartbeat-closed"), events);
+    }
+
     private static Message taskMessage() {
         return Message.builder()
                 .body("""
@@ -131,6 +241,65 @@ class WorkerMessageHandlerTest {
         @Override
         public void sendFailure(WorkerTaskResult result) {
             events.add("failure:" + result.request().subTaskId());
+        }
+    }
+
+    private static class FakeLeaseCoordinator implements WorkerMessageHandler.ProcessingLeaseCoordinator {
+        private final SubtaskClaimStatus claimStatus;
+        private ClaimedSubtaskCompletionStatus completionStatus = ClaimedSubtaskCompletionStatus.COMPLETED;
+
+        private FakeLeaseCoordinator(SubtaskClaimStatus claimStatus) {
+            this.claimStatus = claimStatus;
+        }
+
+        @Override
+        public SubtaskClaimStatus claim(WorkerTaskRequest request) {
+            return claimStatus;
+        }
+
+        @Override
+        public ProcessingLeaseRenewalStatus renew(WorkerTaskRequest request) {
+            return ProcessingLeaseRenewalStatus.RENEWED;
+        }
+
+        @Override
+        public ClaimedSubtaskCompletionStatus complete(WorkerTaskResult result) {
+            return completionStatus;
+        }
+    }
+
+    private static final class ThrowingClaimCoordinator extends FakeLeaseCoordinator {
+        private ThrowingClaimCoordinator() {
+            super(SubtaskClaimStatus.CLAIMED);
+        }
+
+        @Override
+        public SubtaskClaimStatus claim(WorkerTaskRequest request) {
+            throw new RuntimeException("dynamodb unavailable");
+        }
+    }
+
+    private static final class RecordingHeartbeat implements WorkerMessageHandler.LeaseHeartbeat {
+        private final List<String> events;
+        private final boolean ownershipLost;
+
+        private RecordingHeartbeat(List<String> events) {
+            this(events, false);
+        }
+
+        private RecordingHeartbeat(List<String> events, boolean ownershipLost) {
+            this.events = events;
+            this.ownershipLost = ownershipLost;
+        }
+
+        @Override
+        public boolean ownershipLost() {
+            return ownershipLost;
+        }
+
+        @Override
+        public void close() {
+            events.add("heartbeat-closed");
         }
     }
 }
