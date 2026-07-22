@@ -122,7 +122,10 @@ public final class DurableManagerService {
     private void dispatchRecoverableSubtasks(JobRecord job) {
         Instant staleBefore = clock.instant().minus(config.staleDispatchTimeout());
         for (SubtaskRecord subtask : store.listSubtasks(job.taskId())) {
-            if (subtask.status() == SubtaskStatus.PENDING || subtask.isStaleDispatched(staleBefore)) {
+            Instant now = clock.instant();
+            if (subtask.status() == SubtaskStatus.PENDING
+                    || subtask.isStaleDispatched(staleBefore)
+                    || subtask.isExpiredProcessing(now)) {
                 JSONObject payload = new JSONObject()
                         .put("type", "workerTask")
                         .put("taskId", subtask.taskId())
@@ -130,7 +133,7 @@ public final class DurableManagerService {
                         .put("analysis", subtask.analysis())
                         .put("url", subtask.url());
                 queues.sendWorkerTask(payload);
-                store.markDispatchAttempt(subtask.taskId(), subtask.subTaskId(), clock.instant());
+                store.markDispatchAttempt(subtask.taskId(), subtask.subTaskId(), now);
                 logger.info("component=Manager taskId={} subTaskId={} event=worker_task_dispatched",
                         subtask.taskId(), subtask.subTaskId());
             }

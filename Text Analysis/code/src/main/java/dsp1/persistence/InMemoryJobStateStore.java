@@ -96,8 +96,13 @@ public class InMemoryJobStateStore implements JobStateStore {
         if (record == null || record.status().isTerminal()) {
             return false;
         }
+        if (record.status() == SubtaskStatus.PROCESSING && !record.processingLeaseExpiresAt().isBefore(now)) {
+            return false;
+        }
         byId.put(subTaskId, record.toBuilder()
                 .status(SubtaskStatus.DISPATCHED)
+                .processingOwner("")
+                .processingLeaseExpiresAt(Instant.EPOCH)
                 .attemptCount(record.attemptCount() + 1)
                 .dispatchedAt(now)
                 .updatedAt(now)
@@ -108,6 +113,109 @@ public class InMemoryJobStateStore implements JobStateStore {
                 .version(job.version() + 1)
                 .build());
         return true;
+    }
+
+    @Override
+    public synchronized SubtaskClaimStatus claimSubtaskForProcessing(String taskId, String subTaskId, String workerId,
+            Instant now, Duration leaseDuration) {
+        Map<String, SubtaskRecord> byId = subtasks.get(taskId);
+        if (byId == null) {
+            return SubtaskClaimStatus.NOT_FOUND;
+        }
+        SubtaskRecord record = byId.get(subTaskId);
+        if (record == null) {
+            return SubtaskClaimStatus.NOT_FOUND;
+        }
+        if (record.status().isTerminal()) {
+            return SubtaskClaimStatus.ALREADY_TERMINAL;
+        }
+        if (record.status() == SubtaskStatus.PROCESSING
+                && workerId.equals(record.processingOwner())
+                && !record.processingLeaseExpiresAt().isBefore(now)) {
+            byId.put(subTaskId, record.toBuilder()
+                    .processingLeaseExpiresAt(now.plus(leaseDuration))
+                    .lastHeartbeatAt(now)
+                    .updatedAt(now)
+                    .build());
+            return SubtaskClaimStatus.ALREADY_OWNED;
+        }
+        if (record.status() == SubtaskStatus.PROCESSING && !record.processingLeaseExpiresAt().isBefore(now)) {
+            return SubtaskClaimStatus.OWNED_BY_ANOTHER_WORKER;
+        }
+
+        Instant startedAt = record.processingStartedAt().equals(Instant.EPOCH)
+                ? now
+                : record.processingStartedAt();
+        byId.put(subTaskId, record.toBuilder()
+                .status(SubtaskStatus.PROCESSING)
+                .processingOwner(workerId)
+                .processingLeaseExpiresAt(now.plus(leaseDuration))
+                .processingStartedAt(startedAt)
+                .lastHeartbeatAt(now)
+                .attemptCount(record.attemptCount() + 1)
+                .updatedAt(now)
+                .build());
+        return SubtaskClaimStatus.CLAIMED;
+    }
+
+    @Override
+    public synchronized ProcessingLeaseRenewalStatus renewProcessingLease(String taskId, String subTaskId,
+            String workerId, Instant now, Duration leaseDuration) {
+        Map<String, SubtaskRecord> byId = subtasks.get(taskId);
+        if (byId == null) {
+            return ProcessingLeaseRenewalStatus.NOT_FOUND;
+        }
+        SubtaskRecord record = byId.get(subTaskId);
+        if (record == null) {
+            return ProcessingLeaseRenewalStatus.NOT_FOUND;
+        }
+        if (record.status().isTerminal()) {
+            return ProcessingLeaseRenewalStatus.ALREADY_TERMINAL;
+        }
+        if (record.status() != SubtaskStatus.PROCESSING
+                || !workerId.equals(record.processingOwner())
+                || record.processingLeaseExpiresAt().isBefore(now)) {
+            return ProcessingLeaseRenewalStatus.LOST_OWNERSHIP;
+        }
+        byId.put(subTaskId, record.toBuilder()
+                .processingLeaseExpiresAt(now.plus(leaseDuration))
+                .lastHeartbeatAt(now)
+                .updatedAt(now)
+                .build());
+        return ProcessingLeaseRenewalStatus.RENEWED;
+    }
+
+    @Override
+    public synchronized ClaimedSubtaskCompletionStatus completeClaimedSubtask(WorkerTerminalResult result,
+            String workerId, Instant now) {
+        JobRecord job = jobs.get(result.taskId());
+        Map<String, SubtaskRecord> byId = subtasks.get(result.taskId());
+        if (job == null || byId == null) {
+            return ClaimedSubtaskCompletionStatus.NOT_FOUND;
+        }
+        SubtaskRecord record = byId.get(result.subTaskId());
+        if (record == null) {
+            return ClaimedSubtaskCompletionStatus.NOT_FOUND;
+        }
+        if (record.status().isTerminal()) {
+            return ClaimedSubtaskCompletionStatus.ALREADY_TERMINAL;
+        }
+        if (record.status() != SubtaskStatus.PROCESSING || !workerId.equals(record.processingOwner())) {
+            return ClaimedSubtaskCompletionStatus.STALE_OWNER;
+        }
+        SubtaskStatus terminalStatus = result.success() ? SubtaskStatus.SUCCEEDED : SubtaskStatus.FAILED;
+        byId.put(result.subTaskId(), record.toBuilder()
+                .status(terminalStatus)
+                .resultS3Key(result.resultS3Key())
+                .errorMessage(result.errorMessage())
+                .updatedAt(now)
+                .build());
+        jobs.put(result.taskId(), job.toBuilder()
+                .completedSubtaskCount(job.completedSubtaskCount() + 1)
+                .updatedAt(now)
+                .version(job.version() + 1)
+                .build());
+        return ClaimedSubtaskCompletionStatus.COMPLETED;
     }
 
     @Override
