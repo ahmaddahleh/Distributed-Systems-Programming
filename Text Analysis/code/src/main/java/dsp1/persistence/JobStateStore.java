@@ -22,6 +22,14 @@ public interface JobStateStore {
 
     boolean markDispatchAttempt(String taskId, String subTaskId, Instant now);
 
+    SubtaskClaimStatus claimSubtaskForProcessing(String taskId, String subTaskId, String workerId, Instant now,
+            Duration leaseDuration);
+
+    ProcessingLeaseRenewalStatus renewProcessingLease(String taskId, String subTaskId, String workerId, Instant now,
+            Duration leaseDuration);
+
+    ClaimedSubtaskCompletionStatus completeClaimedSubtask(WorkerTerminalResult result, String workerId, Instant now);
+
     TerminalResultStatus acceptTerminalResult(WorkerTerminalResult result, Instant now);
 
     boolean claimFinalization(String taskId, String managerId, Instant now, Duration leaseDuration);
