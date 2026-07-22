@@ -147,19 +147,121 @@ public final class DynamoDbJobStateStore implements JobStateStore {
             dynamoDb.updateItem(UpdateItemRequest.builder()
                     .tableName(tableName)
                     .key(key(taskId, subtaskSk(subTaskId)))
-                    .conditionExpression("#status <> :succeeded AND #status <> :failed")
-                    .updateExpression("SET #status = :dispatched, dispatchedAt = :now, updatedAt = :now ADD attemptCount :one")
+                    .conditionExpression("attribute_exists(PK) AND (#status = :pending OR #status = :dispatched OR (#status = :processing AND processingLeaseExpiresAt < :now))")
+                    .updateExpression("SET #status = :dispatched, dispatchedAt = :now, updatedAt = :now, processingOwner = :blank, processingLeaseExpiresAt = :epoch ADD attemptCount :one")
                     .expressionAttributeNames(Map.of("#status", "status"))
                     .expressionAttributeValues(Map.of(
-                            ":succeeded", s(SubtaskStatus.SUCCEEDED.name()),
-                            ":failed", s(SubtaskStatus.FAILED.name()),
+                            ":pending", s(SubtaskStatus.PENDING.name()),
+                            ":processing", s(SubtaskStatus.PROCESSING.name()),
                             ":dispatched", s(SubtaskStatus.DISPATCHED.name()),
                             ":now", s(now.toString()),
+                            ":blank", s(""),
+                            ":epoch", s(Instant.EPOCH.toString()),
                             ":one", n(1)))
                     .build());
             return true;
         } catch (ConditionalCheckFailedException e) {
             return false;
+        }
+    }
+
+    @Override
+    public SubtaskClaimStatus claimSubtaskForProcessing(String taskId, String subTaskId, String workerId, Instant now,
+            Duration leaseDuration) {
+        ProcessingLeaseRenewalStatus renewal = renewProcessingLease(taskId, subTaskId, workerId, now, leaseDuration);
+        if (renewal == ProcessingLeaseRenewalStatus.RENEWED) {
+            return SubtaskClaimStatus.ALREADY_OWNED;
+        }
+        if (renewal == ProcessingLeaseRenewalStatus.ALREADY_TERMINAL) {
+            return SubtaskClaimStatus.ALREADY_TERMINAL;
+        }
+        if (renewal == ProcessingLeaseRenewalStatus.NOT_FOUND) {
+            return SubtaskClaimStatus.NOT_FOUND;
+        }
+
+        try {
+            dynamoDb.updateItem(UpdateItemRequest.builder()
+                    .tableName(tableName)
+                    .key(key(taskId, subtaskSk(subTaskId)))
+                    .conditionExpression("attribute_exists(PK) AND (#status = :pending OR #status = :dispatched OR (#status = :processing AND processingLeaseExpiresAt < :now))")
+                    .updateExpression("SET #status = :processing, processingOwner = :worker, processingLeaseExpiresAt = :expires, processingStartedAt = if_not_exists(processingStartedAt, :now), lastHeartbeatAt = :now, updatedAt = :now ADD attemptCount :one")
+                    .expressionAttributeNames(Map.of("#status", "status"))
+                    .expressionAttributeValues(Map.of(
+                            ":pending", s(SubtaskStatus.PENDING.name()),
+                            ":dispatched", s(SubtaskStatus.DISPATCHED.name()),
+                            ":processing", s(SubtaskStatus.PROCESSING.name()),
+                            ":worker", s(workerId),
+                            ":expires", s(now.plus(leaseDuration).toString()),
+                            ":now", s(now.toString()),
+                            ":one", n(1)))
+                    .build());
+            return SubtaskClaimStatus.CLAIMED;
+        } catch (ConditionalCheckFailedException e) {
+            return describeClaimFailure(taskId, subTaskId, workerId, now);
+        }
+    }
+
+    @Override
+    public ProcessingLeaseRenewalStatus renewProcessingLease(String taskId, String subTaskId, String workerId,
+            Instant now, Duration leaseDuration) {
+        try {
+            dynamoDb.updateItem(UpdateItemRequest.builder()
+                    .tableName(tableName)
+                    .key(key(taskId, subtaskSk(subTaskId)))
+                    .conditionExpression("attribute_exists(PK) AND #status = :processing AND processingOwner = :worker AND processingLeaseExpiresAt >= :now")
+                    .updateExpression("SET processingLeaseExpiresAt = :expires, lastHeartbeatAt = :now, updatedAt = :now")
+                    .expressionAttributeNames(Map.of("#status", "status"))
+                    .expressionAttributeValues(Map.of(
+                            ":processing", s(SubtaskStatus.PROCESSING.name()),
+                            ":worker", s(workerId),
+                            ":now", s(now.toString()),
+                            ":expires", s(now.plus(leaseDuration).toString())))
+                    .build());
+            return ProcessingLeaseRenewalStatus.RENEWED;
+        } catch (ConditionalCheckFailedException e) {
+            return describeRenewalFailure(taskId, subTaskId, workerId);
+        }
+    }
+
+    @Override
+    public ClaimedSubtaskCompletionStatus completeClaimedSubtask(WorkerTerminalResult result, String workerId,
+            Instant now) {
+        List<TransactWriteItem> writes = List.of(
+                TransactWriteItem.builder().update(Update.builder()
+                        .tableName(tableName)
+                        .key(key(result.taskId(), subtaskSk(result.subTaskId())))
+                        .conditionExpression("attribute_exists(PK) AND #status = :processing AND processingOwner = :worker")
+                        .updateExpression("SET #status = :terminal, resultS3Key = :result, errorMessage = :error, updatedAt = :now")
+                        .expressionAttributeNames(Map.of("#status", "status"))
+                        .expressionAttributeValues(Map.of(
+                                ":processing", s(SubtaskStatus.PROCESSING.name()),
+                                ":worker", s(workerId),
+                                ":terminal", s(result.success() ? SubtaskStatus.SUCCEEDED.name() : SubtaskStatus.FAILED.name()),
+                                ":result", s(result.resultS3Key()),
+                                ":error", s(result.errorMessage()),
+                                ":now", s(now.toString())))
+                        .build()).build(),
+                TransactWriteItem.builder().update(Update.builder()
+                        .tableName(tableName)
+                        .key(key(result.taskId(), SK_META))
+                        .conditionExpression("attribute_exists(PK)")
+                        .updateExpression("SET updatedAt = :now ADD completedSubtaskCount :one, version :one")
+                        .expressionAttributeValues(Map.of(":now", s(now.toString()), ":one", n(1)))
+                        .build()).build());
+        try {
+            dynamoDb.transactWriteItems(TransactWriteItemsRequest.builder().transactItems(writes).build());
+            return ClaimedSubtaskCompletionStatus.COMPLETED;
+        } catch (TransactionCanceledException e) {
+            Optional<SubtaskRecord> existing = listSubtasks(result.taskId()).stream()
+                    .filter(s -> s.subTaskId().equals(result.subTaskId()))
+                    .findFirst();
+            if (existing.isEmpty() || loadJob(result.taskId()).isEmpty()) {
+                return ClaimedSubtaskCompletionStatus.NOT_FOUND;
+            }
+            if (existing.get().status().isTerminal()) {
+                return ClaimedSubtaskCompletionStatus.ALREADY_TERMINAL;
+            }
+            return ClaimedSubtaskCompletionStatus.STALE_OWNER;
         }
     }
 
@@ -343,6 +445,10 @@ public final class DynamoDbJobStateStore implements JobStateStore {
         item.put("createdAt", s(subtask.createdAt().toString()));
         item.put("updatedAt", s(subtask.updatedAt().toString()));
         item.put("dispatchedAt", s(subtask.dispatchedAt().toString()));
+        item.put("processingOwner", s(subtask.processingOwner()));
+        item.put("processingLeaseExpiresAt", s(subtask.processingLeaseExpiresAt().toString()));
+        item.put("processingStartedAt", s(subtask.processingStartedAt().toString()));
+        item.put("lastHeartbeatAt", s(subtask.lastHeartbeatAt().toString()));
         return item;
     }
 
@@ -379,7 +485,43 @@ public final class DynamoDbJobStateStore implements JobStateStore {
                 .createdAt(instant(item, "createdAt"))
                 .updatedAt(instant(item, "updatedAt"))
                 .dispatchedAt(instant(item, "dispatchedAt"))
+                .processingOwner(str(item, "processingOwner"))
+                .processingLeaseExpiresAt(instant(item, "processingLeaseExpiresAt"))
+                .processingStartedAt(instant(item, "processingStartedAt"))
+                .lastHeartbeatAt(instant(item, "lastHeartbeatAt"))
                 .build();
+    }
+
+    private SubtaskClaimStatus describeClaimFailure(String taskId, String subTaskId, String workerId, Instant now) {
+        Optional<SubtaskRecord> existing = listSubtasks(taskId).stream()
+                .filter(s -> s.subTaskId().equals(subTaskId))
+                .findFirst();
+        if (existing.isEmpty() || loadJob(taskId).isEmpty()) {
+            return SubtaskClaimStatus.NOT_FOUND;
+        }
+        SubtaskRecord record = existing.get();
+        if (record.status().isTerminal()) {
+            return SubtaskClaimStatus.ALREADY_TERMINAL;
+        }
+        if (record.status() == SubtaskStatus.PROCESSING
+                && workerId.equals(record.processingOwner())
+                && !record.processingLeaseExpiresAt().isBefore(now)) {
+            return SubtaskClaimStatus.ALREADY_OWNED;
+        }
+        return SubtaskClaimStatus.OWNED_BY_ANOTHER_WORKER;
+    }
+
+    private ProcessingLeaseRenewalStatus describeRenewalFailure(String taskId, String subTaskId, String workerId) {
+        Optional<SubtaskRecord> existing = listSubtasks(taskId).stream()
+                .filter(s -> s.subTaskId().equals(subTaskId))
+                .findFirst();
+        if (existing.isEmpty() || loadJob(taskId).isEmpty()) {
+            return ProcessingLeaseRenewalStatus.NOT_FOUND;
+        }
+        if (existing.get().status().isTerminal()) {
+            return ProcessingLeaseRenewalStatus.ALREADY_TERMINAL;
+        }
+        return ProcessingLeaseRenewalStatus.LOST_OWNERSHIP;
     }
 
     private static Map<String, AttributeValue> baseItem(String taskId, String sk, String entityType) {

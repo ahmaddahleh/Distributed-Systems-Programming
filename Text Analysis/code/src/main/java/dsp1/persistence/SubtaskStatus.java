@@ -3,6 +3,7 @@ package dsp1.persistence;
 public enum SubtaskStatus {
     PENDING,
     DISPATCHED,
+    PROCESSING,
     SUCCEEDED,
     FAILED;
 

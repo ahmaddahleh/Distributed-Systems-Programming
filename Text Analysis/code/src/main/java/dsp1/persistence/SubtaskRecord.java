@@ -14,6 +14,10 @@ public final class SubtaskRecord {
     private final Instant createdAt;
     private final Instant updatedAt;
     private final Instant dispatchedAt;
+    private final String processingOwner;
+    private final Instant processingLeaseExpiresAt;
+    private final Instant processingStartedAt;
+    private final Instant lastHeartbeatAt;
 
     private SubtaskRecord(Builder builder) {
         this.taskId = builder.taskId;
@@ -27,6 +31,10 @@ public final class SubtaskRecord {
         this.createdAt = builder.createdAt;
         this.updatedAt = builder.updatedAt;
         this.dispatchedAt = builder.dispatchedAt;
+        this.processingOwner = builder.processingOwner;
+        this.processingLeaseExpiresAt = builder.processingLeaseExpiresAt;
+        this.processingStartedAt = builder.processingStartedAt;
+        this.lastHeartbeatAt = builder.lastHeartbeatAt;
     }
 
     public static Builder builder(String taskId, String subTaskId) {
@@ -43,7 +51,11 @@ public final class SubtaskRecord {
                 .attemptCount(attemptCount)
                 .createdAt(createdAt)
                 .updatedAt(updatedAt)
-                .dispatchedAt(dispatchedAt);
+                .dispatchedAt(dispatchedAt)
+                .processingOwner(processingOwner)
+                .processingLeaseExpiresAt(processingLeaseExpiresAt)
+                .processingStartedAt(processingStartedAt)
+                .lastHeartbeatAt(lastHeartbeatAt);
     }
 
     public String taskId() { return taskId; }
@@ -57,9 +69,17 @@ public final class SubtaskRecord {
     public Instant createdAt() { return createdAt; }
     public Instant updatedAt() { return updatedAt; }
     public Instant dispatchedAt() { return dispatchedAt; }
+    public String processingOwner() { return processingOwner; }
+    public Instant processingLeaseExpiresAt() { return processingLeaseExpiresAt; }
+    public Instant processingStartedAt() { return processingStartedAt; }
+    public Instant lastHeartbeatAt() { return lastHeartbeatAt; }
 
     public boolean isStaleDispatched(Instant staleBefore) {
         return status == SubtaskStatus.DISPATCHED && dispatchedAt.isBefore(staleBefore);
+    }
+
+    public boolean isExpiredProcessing(Instant now) {
+        return status == SubtaskStatus.PROCESSING && processingLeaseExpiresAt.isBefore(now);
     }
 
     public static final class Builder {
@@ -74,6 +94,10 @@ public final class SubtaskRecord {
         private Instant createdAt = Instant.EPOCH;
         private Instant updatedAt = Instant.EPOCH;
         private Instant dispatchedAt = Instant.EPOCH;
+        private String processingOwner = "";
+        private Instant processingLeaseExpiresAt = Instant.EPOCH;
+        private Instant processingStartedAt = Instant.EPOCH;
+        private Instant lastHeartbeatAt = Instant.EPOCH;
 
         private Builder(String taskId, String subTaskId) {
             this.taskId = taskId;
@@ -89,6 +113,10 @@ public final class SubtaskRecord {
         public Builder createdAt(Instant createdAt) { this.createdAt = createdAt; return this; }
         public Builder updatedAt(Instant updatedAt) { this.updatedAt = updatedAt; return this; }
         public Builder dispatchedAt(Instant dispatchedAt) { this.dispatchedAt = dispatchedAt; return this; }
+        public Builder processingOwner(String processingOwner) { this.processingOwner = processingOwner; return this; }
+        public Builder processingLeaseExpiresAt(Instant processingLeaseExpiresAt) { this.processingLeaseExpiresAt = processingLeaseExpiresAt; return this; }
+        public Builder processingStartedAt(Instant processingStartedAt) { this.processingStartedAt = processingStartedAt; return this; }
+        public Builder lastHeartbeatAt(Instant lastHeartbeatAt) { this.lastHeartbeatAt = lastHeartbeatAt; return this; }
 
         public SubtaskRecord build() {
             return new SubtaskRecord(this);
