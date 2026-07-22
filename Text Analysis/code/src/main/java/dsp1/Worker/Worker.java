@@ -1,6 +1,9 @@
 package dsp1.Worker;
 
 import dsp1.AWS;
+import dsp1.RuntimeConfig;
+import dsp1.persistence.DynamoDbJobStateStore;
+import dsp1.persistence.JobStateStore;
 import org.json.JSONObject;
 import software.amazon.awssdk.services.sqs.model.*;
 import java.io.File;
@@ -9,6 +12,8 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.time.Clock;
+import java.time.Duration;
 import java.util.List;
 
 public class Worker {
@@ -28,6 +33,7 @@ public class Worker {
     private static String activeTaskId;
     private static String activeSubTaskId;
     private static String lastError = "";
+    private static final String WORKER_ID = RuntimeConfig.workerId();
 
     private static Message procMessage;
 
@@ -48,6 +54,14 @@ public class Worker {
                         .build())
                 .queueUrl();
 
+        JobStateStore stateStore = new DynamoDbJobStateStore(aws.getDynamoDb(), RuntimeConfig.dynamoDbTableName());
+        WorkerProcessingLeaseCoordinator leaseCoordinator = new WorkerProcessingLeaseCoordinator(
+                stateStore,
+                WORKER_ID,
+                Clock.systemUTC(),
+                Duration.ofSeconds(RuntimeConfig.workerProcessingLeaseSeconds()));
+        long heartbeatMillis = Duration.ofSeconds(RuntimeConfig.workerLeaseHeartbeatSeconds()).toMillis();
+
         while (true) {
             System.out.println("Worker awaiting tasks from Manager...");
 
@@ -61,7 +75,7 @@ public class Worker {
 
             System.out.println("Worker received SQS message: " + taskMsg.body());
 
-            WorkerMessageHandler.handle(
+            WorkerMessageHandler.handleWithLease(
                     taskMsg,
                     Worker::processTaskRequest,
                     new WorkerMessageHandler.TerminalReporter() {
@@ -75,7 +89,10 @@ public class Worker {
                             sendFailureToManager(result);
                         }
                     },
-                    new QueueMessageDeleter(urlManagerToWorker, Worker::removeMessage));
+                    new QueueMessageDeleter(urlManagerToWorker, Worker::removeMessage),
+                    msg -> delayDuplicateMessage(urlManagerToWorker, msg),
+                    leaseCoordinator,
+                    (request, coordinator) -> ProcessingLeaseHeartbeat.start(request, coordinator, heartbeatMillis));
         }
     }
 
@@ -120,6 +137,7 @@ public class Worker {
                 .queueUrl(queueUrl)
                 .maxNumberOfMessages(1)
                 .waitTimeSeconds(10)
+                .visibilityTimeout((int) RuntimeConfig.workerSqsVisibilityExtensionSeconds())
                 .build();
 
         List<Message> msgs = aws.getSqs().receiveMessage(req).messages();
@@ -151,6 +169,19 @@ public class Worker {
             lastError = "Failed to send message to manager: " + e.getMessage();
             System.err.println(lastError);
             throw new RuntimeException(lastError, e);
+        }
+    }
+
+    private static void delayDuplicateMessage(String queueUrl, Message msg) {
+        try {
+            aws.getSqs().changeMessageVisibility(ChangeMessageVisibilityRequest.builder()
+                    .queueUrl(queueUrl)
+                    .receiptHandle(msg.receiptHandle())
+                    .visibilityTimeout((int) RuntimeConfig.workerDuplicateVisibilityDelaySeconds())
+                    .build());
+            System.out.println("Duplicate task message delayed while another Worker owns the processing lease.");
+        } catch (Exception e) {
+            System.err.println("Failed to delay duplicate task message: " + e.getMessage());
         }
     }
 
@@ -186,7 +217,7 @@ public class Worker {
         try {
             aws.getS3().putObject(
                     software.amazon.awssdk.services.s3.model.PutObjectRequest.builder()
-                            .bucket("dsp-ahmad-dah") //hardcoded bucket name , you can change if needed
+                            .bucket(RuntimeConfig.bucketName())
                             .key(keyName)
                             .build(),
                     file.toPath());

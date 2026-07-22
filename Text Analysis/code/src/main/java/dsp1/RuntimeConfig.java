@@ -14,6 +14,11 @@ public final class RuntimeConfig {
     public static final String PROP_STALE_DISPATCH_SECONDS = "dsp.manager.staleDispatchSeconds";
     public static final String PROP_RECOVERY_INTERVAL_SECONDS = "dsp.manager.recoveryIntervalSeconds";
     public static final String PROP_MANAGER_ID = "dsp.manager.id";
+    public static final String PROP_WORKER_ID = "dsp.worker.id";
+    public static final String PROP_WORKER_PROCESSING_LEASE_SECONDS = "dsp.worker.processingLeaseSeconds";
+    public static final String PROP_WORKER_LEASE_HEARTBEAT_SECONDS = "dsp.worker.leaseHeartbeatSeconds";
+    public static final String PROP_WORKER_DUPLICATE_VISIBILITY_DELAY_SECONDS = "dsp.worker.duplicateVisibilityDelaySeconds";
+    public static final String PROP_WORKER_SQS_VISIBILITY_EXTENSION_SECONDS = "dsp.worker.sqsVisibilityExtensionSeconds";
 
     private RuntimeConfig() {
     }
@@ -62,6 +67,35 @@ public final class RuntimeConfig {
         return value(PROP_MANAGER_ID, "DSP_MANAGER_ID", "manager-" + java.util.UUID.randomUUID());
     }
 
+    public static String workerId() {
+        return value(PROP_WORKER_ID, "DSP_WORKER_ID", "worker-" + java.util.UUID.randomUUID());
+    }
+
+    public static long workerProcessingLeaseSeconds() {
+        long seconds = positiveLong(PROP_WORKER_PROCESSING_LEASE_SECONDS, "DSP_WORKER_PROCESSING_LEASE_SECONDS", 120);
+        long heartbeatSeconds = workerLeaseHeartbeatSeconds();
+        if (seconds <= heartbeatSeconds) {
+            throw new IllegalArgumentException("Worker processing lease duration must be greater than heartbeat interval");
+        }
+        return seconds;
+    }
+
+    public static long workerLeaseHeartbeatSeconds() {
+        return positiveLong(PROP_WORKER_LEASE_HEARTBEAT_SECONDS, "DSP_WORKER_LEASE_HEARTBEAT_SECONDS", 30);
+    }
+
+    public static long workerDuplicateVisibilityDelaySeconds() {
+        return positiveLong(PROP_WORKER_DUPLICATE_VISIBILITY_DELAY_SECONDS,
+                "DSP_WORKER_DUPLICATE_VISIBILITY_DELAY_SECONDS",
+                30);
+    }
+
+    public static long workerSqsVisibilityExtensionSeconds() {
+        return positiveLong(PROP_WORKER_SQS_VISIBILITY_EXTENSION_SECONDS,
+                "DSP_WORKER_SQS_VISIBILITY_EXTENSION_SECONDS",
+                120);
+    }
+
     static String value(String propertyName, String envName, String defaultValue) {
         String propertyValue = System.getProperty(propertyName);
         if (propertyValue != null && !propertyValue.isBlank()) {
@@ -72,5 +106,13 @@ public final class RuntimeConfig {
             return envValue;
         }
         return defaultValue;
+    }
+
+    private static long positiveLong(String propertyName, String envName, long defaultValue) {
+        long value = Long.parseLong(value(propertyName, envName, Long.toString(defaultValue)));
+        if (value <= 0) {
+            throw new IllegalArgumentException(propertyName + " must be greater than zero");
+        }
+        return value;
     }
 }
